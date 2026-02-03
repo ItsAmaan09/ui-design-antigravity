@@ -19,6 +19,8 @@ interface Business {
   plan: 'Enterprise' | 'Professional' | 'Basic';
   users: number;
   status: 'Active' | 'Suspended' | 'Inactive';
+  createdDate?: string; // Mock for view modal
+  features?: string[]; // Mock for view modal
 }
 
 @Component({
@@ -101,5 +103,11 @@ export class CorporateCustomersComponent {
       case 'Professional': return 'bg-info-subtle text-info';
       default: return 'bg-light text-dark';
     }
+  }
+
+  selectedBusiness: Business | null = null;
+
+  viewBusiness(business: Business) {
+    this.selectedBusiness = business;
   }
 }
