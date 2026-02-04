@@ -139,7 +139,10 @@
             <div class="col-md-9 d-flex align-items-center">
               <div class="w-100">
                 <label class="form-label fw-bold small text-dark">Full Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" placeholder="Enter full name" formControlName="fullName">
+                <input type="text" class="form-control" placeholder="Enter full name" formControlName="fullName" [class.is-invalid]="createUserForm.get('fullName')?.invalid && createUserForm.get('fullName')?.touched">
+                <div *ngIf="createUserForm.get('fullName')?.invalid && createUserForm.get('fullName')?.touched" class="text-danger small mt-1">
+                  Full Name is required.
+                </div>
               </div>
             </div>
           </div>
@@ -148,11 +151,18 @@
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Email Address <span class="text-danger">*</span></label>
-              <input type="email" class="form-control" placeholder="user@example.com" formControlName="email">
+              <input type="email" class="form-control" placeholder="user@example.com" formControlName="email" [class.is-invalid]="createUserForm.get('email')?.invalid && createUserForm.get('email')?.touched">
+              <div *ngIf="createUserForm.get('email')?.invalid && createUserForm.get('email')?.touched" class="text-danger small mt-1">
+                <div *ngIf="createUserForm.get('email')?.errors?.['required']">Email is required.</div>
+                <div *ngIf="createUserForm.get('email')?.errors?.['email']">Invalid email format.</div>
+              </div>
             </div>
             <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Phone Number <span class="text-danger">*</span></label>
-              <input type="tel" class="form-control" placeholder="+252 XX XXX XXXX" formControlName="phone">
+              <input type="tel" class="form-control" placeholder="+252 XX XXX XXXX" formControlName="phone" [class.is-invalid]="createUserForm.get('phone')?.invalid && createUserForm.get('phone')?.touched">
+              <div *ngIf="createUserForm.get('phone')?.invalid && createUserForm.get('phone')?.touched" class="text-danger small mt-1">
+                Phone Number is required.
+              </div>
             </div>
           </div>
 
@@ -160,14 +170,20 @@
           <div class="row g-3 mb-4">
              <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Select Role</label>
-              <select class="form-select" formControlName="role">
+              <select class="form-select" formControlName="role" [class.is-invalid]="createUserForm.get('role')?.invalid && createUserForm.get('role')?.touched">
                 <option selected disabled value="">Choose a role...</option>
                 <option *ngFor="let role of availableRoles" [value]="role.name">{{ role.name }}</option>
               </select>
+              <div *ngIf="createUserForm.get('role')?.invalid && createUserForm.get('role')?.touched" class="text-danger small mt-1">
+                Role is required.
+              </div>
             </div>
             <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Address <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Mogadishu, Somalia" formControlName="address">
+              <input type="text" class="form-control" placeholder="Mogadishu, Somalia" formControlName="address" [class.is-invalid]="createUserForm.get('address')?.invalid && createUserForm.get('address')?.touched">
+              <div *ngIf="createUserForm.get('address')?.invalid && createUserForm.get('address')?.touched" class="text-danger small mt-1">
+                Address is required.
+              </div>
             </div>
           </div>
 
@@ -179,10 +195,13 @@
           <div class="row g-3 mb-4">
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">Select Company</label>
-               <select class="form-select" formControlName="company">
+               <select class="form-select" formControlName="company" [class.is-invalid]="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched">
                   <option selected disabled value="">Select Company</option>
                   <option *ngFor="let c of companies" [value]="c">{{ c }}</option>
                </select>
+               <div *ngIf="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched" class="text-danger small mt-1">
+                  Company is required.
+               </div>
             </div>
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">List of Accounts</label>
@@ -191,8 +210,12 @@
                           bindValue="id"
                           [multiple]="true"
                           placeholder="Select Accounts"
-                          formControlName="account">
+                          formControlName="account"
+                          [class.is-invalid]="createUserForm.get('account')?.invalid && createUserForm.get('account')?.touched">
                </ng-select>
+               <div *ngIf="createUserForm.get('account')?.invalid && createUserForm.get('account')?.touched" class="text-danger small mt-1">
+                  At least one account is required.
+               </div>
             </div>
           </div>
 
