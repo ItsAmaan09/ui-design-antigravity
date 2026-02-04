@@ -156,4 +156,12 @@ export class CorporateUsersListComponent implements OnInit {
       default: return 'bg-light text-dark';
     }
   }
+
+  onSubmit() {
+    if (this.createUserForm.valid) {
+      console.log('User Created:', this.createUserForm.value);
+      // Here you would typically call a service to save the user
+      // and then close the modal
+    }
+  }
 }
