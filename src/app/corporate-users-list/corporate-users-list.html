@@ -195,10 +195,11 @@
           <div class="row g-3 mb-4">
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">Select Company</label>
-               <select class="form-select" formControlName="company" [class.is-invalid]="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched">
-                  <option selected disabled value="">Select Company</option>
-                  <option *ngFor="let c of companies" [value]="c">{{ c }}</option>
-               </select>
+               <ng-select [items]="companies"
+                          placeholder="Search Company"
+                          formControlName="company"
+                          [class.is-invalid]="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched">
+               </ng-select>
                <div *ngIf="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched" class="text-danger small mt-1">
                   Company is required.
                </div>
