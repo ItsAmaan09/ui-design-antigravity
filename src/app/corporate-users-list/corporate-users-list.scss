@@ -1,0 +1,84 @@
+
+.dashboard-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50%;
+  
+  // Assign specific colors based on the design if possible, 
+  // currently simplified to primary as per HTML, but can be dynamic.
+  &.bg-primary {
+    background-color: #0d47a1 !important; // Darker blue like in design
+  }
+}
+
+.bg-purple-subtle {
+  background-color: #e2d9f3 !important;
+  color: #6f42c1 !important;
+}
+
+.table-dark {
+  th {
+    background-color: #0d47a1; // Dark blue header
+    border-bottom: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+.custom-table {
+  thead th {
+    border-top: none;
+  }
+  
+  tbody tr {
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: #f8f9fa;
+    }
+    
+    td {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e9ecef;
+    }
+  }
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: #e9ecef;
+    transform: translateY(-1px);
+  }
+}
+
+.form-select, .form-control {
+  font-size: 0.9rem;
+  &:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 71, 161, 0.15);
+    border-color: #8bb9fe;
+  }
+}
+
+.badge {
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+}

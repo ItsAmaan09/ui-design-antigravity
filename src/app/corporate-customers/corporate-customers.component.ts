@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 interface StatCard {
   title: string;
@@ -26,7 +27,7 @@ interface Business {
 @Component({
   selector: 'app-corporate-customers',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './corporate-customers.component.html',
   styleUrls: ['./corporate-customers.component.scss']
 })
