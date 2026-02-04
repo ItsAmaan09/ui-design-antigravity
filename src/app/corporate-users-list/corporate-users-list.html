@@ -195,9 +195,13 @@
           <div class="row g-3 mb-4">
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">Select Company</label>
-               <ng-select [items]="companies"
+               <ng-select [items]="companies$ | async"
                           placeholder="Search Company"
                           formControlName="company"
+                          [typeahead]="companyInput$"
+                          [loading]="companyLoading"
+                          [minTermLength]="3"
+                          typeToSearchText="Please enter 3 or more characters"
                           [class.is-invalid]="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched">
                </ng-select>
                <div *ngIf="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched" class="text-danger small mt-1">

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { combineLatest, startWith, map } from 'rxjs';
+import { combineLatest, startWith, map, Observable, Subject, of, debounceTime, distinctUntilChanged, switchMap, tap, delay, filter } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 interface User {
@@ -58,7 +58,16 @@ export class CorporateUsersListComponent implements OnInit {
     { name: 'Admin', badgeClass: 'bg-danger-subtle text-danger', description: 'Access: All features, User management, Role management, Configuration' }
   ];
 
-  companies: string[] = ['Dahabshiil Business Services', 'Hormuud Telecom', 'Somali Electricity'];
+  // Mock Data Source for Search
+  private allCompanies: string[] = [
+    'Dahabshiil Business Services', 'Hormuud Telecom', 'Somali Electricity', 
+    'IBS Bank', 'Premier Bank', 'Somtel', 'Golis Telecom', 'Salaam Bank', 
+    'Amal Bank', 'MyBank', 'Telesom', 'Nationlink'
+  ];
+
+  companies$: Observable<string[]> = of([]);
+  companyInput$ = new Subject<string>();
+  companyLoading = false;
   
   accounts: AccountDef[] = [
     { id: 'ACC-001', name: 'ACC-001 (Main)' },
@@ -131,7 +140,7 @@ export class CorporateUsersListComponent implements OnInit {
     role: new FormControl('', Validators.required),
     address: new FormControl('', Validators.required),
     company: new FormControl('', Validators.required),
-    account: new FormControl('', Validators.required),
+    account: new FormControl([], Validators.required),
    // status is optional/hidden in UI logic if hardcoded, but good to have
     status: new FormControl('Active') 
   });
@@ -147,6 +156,24 @@ export class CorporateUsersListComponent implements OnInit {
     ]).subscribe(([search, role]) => {
       this.filterUsers(search, role);
     });
+
+    this.loadCompanies();
+  }
+
+  private loadCompanies() {
+    this.companies$ = this.companyInput$.pipe(
+      filter(term => !!term && term.length >= 3),
+      distinctUntilChanged(),
+      tap(() => this.companyLoading = true),
+      debounceTime(400),
+      switchMap(term => this.fakeCompanyApi(term)),
+      tap(() => this.companyLoading = false)
+    );
+  }
+
+  fakeCompanyApi(term: string): Observable<string[]> {
+    // Simulate API call
+    return of(this.allCompanies.filter(c => c.toLowerCase().includes(term.toLowerCase()))).pipe(delay(500));
   }
 
   filterUsers(search: string | null, role: string | null) {
