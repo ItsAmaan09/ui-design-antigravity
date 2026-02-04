@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { combineLatest, startWith, map } from 'rxjs';
 
 interface User {
@@ -100,6 +100,18 @@ export class CorporateUsersListComponent implements OnInit {
   filterForm = new FormGroup({
     search: new FormControl(''),
     role: new FormControl('All Roles')
+  });
+
+  createUserForm = new FormGroup({
+    fullName: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    phone: new FormControl('', Validators.required),
+    role: new FormControl('', Validators.required),
+    address: new FormControl('', Validators.required),
+    company: new FormControl('', Validators.required),
+    account: new FormControl('', Validators.required),
+   // status is optional/hidden in UI logic if hardcoded, but good to have
+    status: new FormControl('Active') 
   });
 
   filteredUsers: User[] = [];

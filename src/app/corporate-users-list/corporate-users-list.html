@@ -123,7 +123,7 @@
         <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4 bg-light-subtle">
-        <form>
+        <form [formGroup]="createUserForm">
           <!-- Row 1: Image & Name -->
           <div class="row g-3 mb-3">
             <div class="col-md-3 d-flex align-items-center justify-content-center">
@@ -136,7 +136,7 @@
             <div class="col-md-9 d-flex align-items-center">
               <div class="w-100">
                 <label class="form-label fw-bold small text-dark">Full Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" placeholder="Enter full name">
+                <input type="text" class="form-control" placeholder="Enter full name" formControlName="fullName">
               </div>
             </div>
           </div>
@@ -145,11 +145,11 @@
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Email Address <span class="text-danger">*</span></label>
-              <input type="email" class="form-control" placeholder="user@example.com">
+              <input type="email" class="form-control" placeholder="user@example.com" formControlName="email">
             </div>
             <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Phone Number <span class="text-danger">*</span></label>
-              <input type="tel" class="form-control" placeholder="+252 XX XXX XXXX">
+              <input type="tel" class="form-control" placeholder="+252 XX XXX XXXX" formControlName="phone">
             </div>
           </div>
 
@@ -157,14 +157,14 @@
           <div class="row g-3 mb-4">
              <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Select Role</label>
-              <select class="form-select">
-                <option selected disabled>Choose a role...</option>
+              <select class="form-select" formControlName="role">
+                <option selected disabled value="">Choose a role...</option>
                 <option *ngFor="let role of availableRoles" [value]="role.name">{{ role.name }}</option>
               </select>
             </div>
             <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Address <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Mogadishu, Somalia">
+              <input type="text" class="form-control" placeholder="Mogadishu, Somalia" formControlName="address">
             </div>
           </div>
 
@@ -174,16 +174,16 @@
           <div class="row g-3 mb-4">
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">Select Company</label>
-               <select class="form-select">
-                  <option selected disabled>Select Company</option>
-                  <option *ngFor="let c of companies">{{ c }}</option>
+               <select class="form-select" formControlName="company">
+                  <option selected disabled value="">Select Company</option>
+                  <option *ngFor="let c of companies" [value]="c">{{ c }}</option>
                </select>
             </div>
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">List of Accounts</label>
-               <select class="form-select">
-                  <option selected disabled>Select Account</option>
-                  <option *ngFor="let acc of accounts">{{ acc }}</option>
+               <select class="form-select" formControlName="account">
+                  <option selected disabled value="">Select Account</option>
+                  <option *ngFor="let acc of accounts" [value]="acc">{{ acc }}</option>
                </select>
             </div>
           </div>
