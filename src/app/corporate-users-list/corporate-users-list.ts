@@ -27,6 +27,17 @@ interface AccountDef {
   name: string;
 }
 
+export interface CreateUserRequestDto {
+  fullName: string;
+  email: string;
+  phone: string;
+  role: string;
+  address: string;
+  company: string;
+  accounts: string[];
+  status: 'Active' | 'Inactive';
+}
+
 @Component({
   selector: 'app-corporate-users-list',
   standalone: true,
@@ -170,9 +181,21 @@ export class CorporateUsersListComponent implements OnInit {
 
   onSubmit() {
     if (this.createUserForm.valid) {
-      console.log('User Created:', this.createUserForm.value);
-      // Here you would typically call a service to save the user
-      // and then close the modal
+      const formValue = this.createUserForm.value;
+      
+      const payload: CreateUserRequestDto = {
+        fullName: formValue.fullName!,
+        email: formValue.email!,
+        phone: formValue.phone!,
+        role: formValue.role!,
+        address: formValue.address!,
+        company: formValue.company!,
+        accounts: formValue.account as unknown as string[], // Cast because form value inference can be tricky with multi-select
+        status: (formValue.status as 'Active' | 'Inactive') || 'Active'
+      };
+
+      console.log('API Payload:', payload);
+      // Here you would call: this.userService.createUser(payload).subscribe(...)
     }
   }
 }
