@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { combineLatest, startWith, map, Observable, Subject, of, debounceTime, distinctUntilChanged, switchMap, tap, delay, filter } from 'rxjs';
+import { combineLatest, startWith, map, Observable, Subject, of, debounceTime, distinctUntilChanged, switchMap, tap, delay, filter, catchError } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CorporateService, CompanyResponseDto } from '../services/corporate';
 
@@ -159,9 +159,7 @@ export class CorporateUsersListComponent implements OnInit {
 
   getCorporatesData(term: string): Observable<CompanyResponseDto[]> {
     if (this.companies.length === 0) {
-      this.getCorporates();
-      // Since getCorporates is async, we need to wait for it.
-      // However, to keep it simple and fix the race condition properly without changing the signature too much:
+      // Fetch data first, then filter
       return this._CorporateService.getCorporates().pipe(
         map(response => {
            this.companies = response.Data;
@@ -169,9 +167,10 @@ export class CorporateUsersListComponent implements OnInit {
         })
       );
     } else {
+      // Data already loaded, just filter locally
       return of(
         this.companies.filter((c) => c.CompanyName.toLowerCase().includes(term.toLowerCase())),
-      ).pipe(delay(500));
+      );
     }
   }
 
@@ -188,12 +187,20 @@ export class CorporateUsersListComponent implements OnInit {
 
   private loadCompanies() {
     this.companies$ = this.companyInput$.pipe(
-      filter(term => !!term && term.length >= 3),
+      filter((term) => !!term && term.length >= 3),
       distinctUntilChanged(),
-      tap(() => this.companyLoading = true),
+      tap(() => (this.companyLoading = true)),
       debounceTime(400),
-      switchMap(term => this.getCorporatesData(term)),
-      tap(() => this.companyLoading = false)
+      switchMap((term) => 
+        this.getCorporatesData(term).pipe(
+          catchError((err) => {
+            console.error('Company search error:', err);
+            this.companyLoading = false;
+            return of([]); // Return empty list to keep stream alive
+          })
+        )
+      ),
+      tap(() => (this.companyLoading = false)),
     );
   }
 

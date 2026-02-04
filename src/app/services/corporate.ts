@@ -1,30 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface CompanyResponseDto {
   CompanyName: string;
   CompanyId: string;
 }
 
+export interface ApiResponse<T> {
+  Data: T;
+  Message: string;
+  Status: boolean;
+  // Add other common fields if known, but Data is critical from component usage
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CorporateService {
+  private baseUrl = 'https://api.example.com/'; // Placeholder, should be environment config
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  getCorporates(): Observable<{ Data: CompanyResponseDto[] }> {
-    const mockData: CompanyResponseDto[] = [
-      { CompanyName: 'Dahabshiil Business Services', CompanyId: 'DBS' },
-      { CompanyName: 'Hormuud Telecom', CompanyId: 'HRM' },
-      { CompanyName: 'Somali Electricity', CompanyId: 'SEC' },
-      { CompanyName: 'IBS Bank', CompanyId: 'IBS' },
-      { CompanyName: 'Premier Bank', CompanyId: 'PBB' },
-      { CompanyName: 'Somtel', CompanyId: 'SMT' },
-      { CompanyName: 'Golis Telecom', CompanyId: 'GOL' }
-    ];
-
-    return of({ Data: mockData }).pipe(delay(500));
+  getCorporates(): Observable<ApiResponse<CompanyResponseDto[]>> {
+    return this.http.post<ApiResponse<CompanyResponseDto[]>>(`${this.baseUrl}Company/get`, null);
   }
 }
