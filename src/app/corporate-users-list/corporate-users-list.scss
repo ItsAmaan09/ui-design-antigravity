@@ -82,3 +82,19 @@
   font-size: 0.75rem;
   letter-spacing: 0.3px;
 }
+
+.role-card {
+  transition: all 0.2s;
+  cursor: pointer;
+  border-color: #e9ecef !important;
+  
+  &:hover {
+    border-color: #8bb9fe !important;
+    background-color: #f8fbff;
+  }
+}
+
+.modal-header {
+  border-radius: 0;
+}
+

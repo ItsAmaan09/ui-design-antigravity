@@ -13,6 +13,12 @@ interface User {
   createdDate: string;
 }
 
+interface RoleDef {
+  name: string;
+  badgeClass: string;
+  description: string;
+}
+
 @Component({
   selector: 'app-corporate-users-list',
   standalone: true,
@@ -24,6 +30,14 @@ export class CorporateUsersListComponent {
   businessName: string = 'Dahabshiil Business Services';
   businessId: string = 'BIZ-2024-001';
   businessType: string = 'Financial Services';
+
+  availableRoles: RoleDef[] = [
+    { name: 'User', badgeClass: 'bg-secondary-subtle text-secondary', description: 'Access: Dashboard, Reports only' },
+    { name: 'Inputter', badgeClass: 'bg-primary-subtle text-primary', description: 'Access: Dashboard, Reports, Payroll (send requests), Payments (initiate)' },
+    { name: 'Reviewer', badgeClass: 'bg-purple-subtle text-purple', description: 'Access: Dashboard, Reports, Payroll (review only), Payments (review only)' },
+    { name: 'Authorizer', badgeClass: 'bg-success-subtle text-success', description: 'Access: Dashboard, Reports, Payroll (approve), Payments (approve)' },
+    { name: 'Admin', badgeClass: 'bg-danger-subtle text-danger', description: 'Access: All features, User management, Role management, Configuration' }
+  ];
 
   users: User[] = [
     {

@@ -31,7 +31,7 @@
           <button class="btn btn-outline-primary d-flex align-items-center gap-2">
             <i class="bi bi-eye"></i> View Roles Info
           </button>
-          <button class="btn btn-primary d-flex align-items-center gap-2">
+          <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createUserModal">
             <i class="bi bi-plus-lg"></i> Create User
           </button>
         </div>
@@ -112,6 +112,75 @@
         </table>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- Create User Modal -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 8px; overflow: hidden;">
+      <div class="modal-header border-bottom-0 pb-3 bg-dark text-white d-flex flex-column align-items-start justify-content-center" style="background-color: #0d47a1 !important;">
+        <h5 class="modal-title fw-bold mb-0" id="createUserModalLabel">Create New User</h5>
+        <div class="small opacity-75">for {{ businessName }}</div>
+        <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 bg-light-subtle">
+        <form>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-dark">Full Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" placeholder="Enter full name">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-dark">Email Address <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" placeholder="user@example.com">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-dark">Phone Number <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" placeholder="+252 XX XXX XXXX">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-dark">Initial Status</label>
+              <select class="form-select">
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold small text-dark mb-2">Assign Roles <span class="text-danger">*</span> (Multiple selection allowed)</label>
+            <div class="d-flex flex-column gap-2">
+              <div *ngFor="let role of availableRoles" class="card border shadow-sm role-card">
+                <div class="card-body p-2 d-flex align-items-start gap-3">
+                  <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" [id]="'role-' + role.name">
+                  </div>
+                  <div>
+                    <label class="form-check-label d-block mb-1" [for]="'role-' + role.name">
+                        <span class="badge rounded-1 fw-normal px-2 py-1" [ngClass]="role.badgeClass">{{ role.name }}</span>
+                    </label>
+                    <div class="small text-muted">{{ role.description }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-info border-info-subtle bg-info-subtle text-info-emphasis d-flex align-items-center gap-2 mb-0" role="alert">
+            <i class="bi bi-info-circle-fill"></i>
+            <div class="small fw-medium">
+              <strong>Bank Control:</strong> All user creations require branch approval and will be fully audited.
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer border-top-0 px-4 pb-4 pt-2 bg-light-subtle">
+        <button type="button" class="btn btn-outline-secondary px-5 py-2 rounded-3 fw-medium" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-secondary px-5 py-2 rounded-3 fw-medium ms-auto disabled">Create User</button>
+      </div>
     </div>
   </div>
 </div>
