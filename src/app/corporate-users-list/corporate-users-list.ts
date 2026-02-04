@@ -41,6 +41,9 @@ export class CorporateUsersListComponent implements OnInit {
     { name: 'Admin', badgeClass: 'bg-danger-subtle text-danger', description: 'Access: All features, User management, Role management, Configuration' }
   ];
 
+  companies: string[] = ['Dahabshiil Business Services', 'Hormuud Telecom', 'Somali Electricity'];
+  accounts: string[] = ['ACC-001 (Main)', 'ACC-002 (Payroll)', 'ACC-003 (Petty Cash)'];
+
   users: User[] = [
     {
       initials: 'HA',

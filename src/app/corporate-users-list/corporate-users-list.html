@@ -124,11 +124,25 @@
       </div>
       <div class="modal-body p-4 bg-light-subtle">
         <form>
+          <!-- Row 1: Image & Name -->
           <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label fw-bold small text-dark">Full Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Enter full name">
+            <div class="col-md-3 d-flex align-items-center justify-content-center">
+               <div class="image-upload-box rounded-circle border d-flex align-items-center justify-content-center bg-white text-muted shadow-sm position-relative">
+                 <i class="bi bi-camera fs-4"></i>
+                 <input type="file" class="position-absolute w-100 h-100 opacity-0" title="Upload Image">
+               </div>
+               <div class="small ms-3 text-muted fst-italic">Upload Photo</div>
             </div>
+            <div class="col-md-9 d-flex align-items-center">
+              <div class="w-100">
+                <label class="form-label fw-bold small text-dark">Full Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Enter full name">
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: Email & Phone -->
+          <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label class="form-label fw-bold small text-dark">Email Address <span class="text-danger">*</span></label>
               <input type="email" class="form-control" placeholder="user@example.com">
@@ -137,31 +151,40 @@
               <label class="form-label fw-bold small text-dark">Phone Number <span class="text-danger">*</span></label>
               <input type="tel" class="form-control" placeholder="+252 XX XXX XXXX">
             </div>
-            <div class="col-md-6">
-              <label class="form-label fw-bold small text-dark">Initial Status</label>
+          </div>
+
+          <!-- Row 3: Role & Address -->
+          <div class="row g-3 mb-4">
+             <div class="col-md-6">
+              <label class="form-label fw-bold small text-dark">Select Role</label>
               <select class="form-select">
-                <option>Active</option>
-                <option>Inactive</option>
+                <option selected disabled>Choose a role...</option>
+                <option *ngFor="let role of availableRoles" [value]="role.name">{{ role.name }}</option>
               </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-dark">Address <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" placeholder="Mogadishu, Somalia">
             </div>
           </div>
 
-          <div class="mb-4">
-            <label class="form-label fw-bold small text-dark mb-2">Assign Roles <span class="text-danger">*</span> (Multiple selection allowed)</label>
-            <div class="d-flex flex-column gap-2">
-              <div *ngFor="let role of availableRoles" class="card border shadow-sm role-card">
-                <div class="card-body p-2 d-flex align-items-start gap-3">
-                  <div class="form-check mt-1">
-                    <input class="form-check-input" type="checkbox" [id]="'role-' + role.name">
-                  </div>
-                  <div>
-                    <label class="form-check-label d-block mb-1" [for]="'role-' + role.name">
-                        <span class="badge rounded-1 fw-normal px-2 py-1" [ngClass]="role.badgeClass">{{ role.name }}</span>
-                    </label>
-                    <div class="small text-muted">{{ role.description }}</div>
-                  </div>
-                </div>
-              </div>
+          <hr class="my-4 text-muted opacity-25">
+
+          <!-- Row 4: Company & Accounts -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+               <label class="form-label fw-bold small text-dark">Select Company</label>
+               <select class="form-select">
+                  <option selected disabled>Select Company</option>
+                  <option *ngFor="let c of companies">{{ c }}</option>
+               </select>
+            </div>
+            <div class="col-md-6">
+               <label class="form-label fw-bold small text-dark">List of Accounts</label>
+               <select class="form-select">
+                  <option selected disabled>Select Account</option>
+                  <option *ngFor="let acc of accounts">{{ acc }}</option>
+               </select>
             </div>
           </div>
 
