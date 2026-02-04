@@ -186,10 +186,13 @@
             </div>
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">List of Accounts</label>
-               <select class="form-select" formControlName="account">
-                  <option selected disabled value="">Select Account</option>
-                  <option *ngFor="let acc of accounts" [value]="acc">{{ acc }}</option>
-               </select>
+               <ng-select [items]="accounts"
+                          bindLabel="name"
+                          bindValue="id"
+                          [multiple]="true"
+                          placeholder="Select Accounts"
+                          formControlName="account">
+               </ng-select>
             </div>
           </div>
 

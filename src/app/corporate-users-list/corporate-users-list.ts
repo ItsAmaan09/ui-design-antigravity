@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { combineLatest, startWith, map } from 'rxjs';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 interface User {
   initials: string;
@@ -21,10 +22,15 @@ interface RoleDef {
   description: string;
 }
 
+interface AccountDef {
+  id: string;
+  name: string;
+}
+
 @Component({
   selector: 'app-corporate-users-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './corporate-users-list.html',
   styleUrls: ['./corporate-users-list.scss']
 })
@@ -42,7 +48,12 @@ export class CorporateUsersListComponent implements OnInit {
   ];
 
   companies: string[] = ['Dahabshiil Business Services', 'Hormuud Telecom', 'Somali Electricity'];
-  accounts: string[] = ['ACC-001 (Main)', 'ACC-002 (Payroll)', 'ACC-003 (Petty Cash)'];
+  
+  accounts: AccountDef[] = [
+    { id: 'ACC-001', name: 'ACC-001 (Main)' },
+    { id: 'ACC-002', name: 'ACC-002 (Payroll)' },
+    { id: 'ACC-003', name: 'ACC-003 (Petty Cash)' }
+  ];
 
   users: User[] = [
     {
