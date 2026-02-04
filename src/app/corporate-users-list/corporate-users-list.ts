@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { combineLatest, startWith, map, Observable, Subject, of, debounceTime, distinctUntilChanged, switchMap, tap, delay, filter } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CorporateService, CompanyResponseDto } from '../services/corporate';
 
 interface User {
   initials: string;
@@ -46,6 +47,8 @@ export interface CreateUserRequestDto {
   styleUrls: ['./corporate-users-list.scss']
 })
 export class CorporateUsersListComponent implements OnInit {
+  private _CorporateService = inject(CorporateService);
+
   businessName: string = 'Dahabshiil Business Services';
   businessId: string = 'BIZ-2024-001';
   businessType: string = 'Financial Services';
@@ -58,14 +61,8 @@ export class CorporateUsersListComponent implements OnInit {
     { name: 'Admin', badgeClass: 'bg-danger-subtle text-danger', description: 'Access: All features, User management, Role management, Configuration' }
   ];
 
-  // Mock Data Source for Search
-  private allCompanies: string[] = [
-    'Dahabshiil Business Services', 'Hormuud Telecom', 'Somali Electricity', 
-    'IBS Bank', 'Premier Bank', 'Somtel', 'Golis Telecom', 'Salaam Bank', 
-    'Amal Bank', 'MyBank', 'Telesom', 'Nationlink'
-  ];
-
-  companies$: Observable<string[]> = of([]);
+  companies: CompanyResponseDto[] = [];
+  companies$: Observable<CompanyResponseDto[]> = of([]);
   companyInput$ = new Subject<string>();
   companyLoading = false;
   
@@ -160,20 +157,44 @@ export class CorporateUsersListComponent implements OnInit {
     this.loadCompanies();
   }
 
+  getCorporatesData(term: string): Observable<CompanyResponseDto[]> {
+    if (this.companies.length === 0) {
+      this.getCorporates();
+      // Since getCorporates is async, we need to wait for it.
+      // However, to keep it simple and fix the race condition properly without changing the signature too much:
+      return this._CorporateService.getCorporates().pipe(
+        map(response => {
+           this.companies = response.Data;
+           return this.companies.filter(c => c.CompanyName.toLowerCase().includes(term.toLowerCase()));
+        })
+      );
+    } else {
+      return of(
+        this.companies.filter((c) => c.CompanyName.toLowerCase().includes(term.toLowerCase())),
+      ).pipe(delay(500));
+    }
+  }
+
+  getCorporates() {
+    this._CorporateService.getCorporates().subscribe({
+      next: (response) => {
+        this.companies = response.Data;
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
   private loadCompanies() {
     this.companies$ = this.companyInput$.pipe(
       filter(term => !!term && term.length >= 3),
       distinctUntilChanged(),
       tap(() => this.companyLoading = true),
       debounceTime(400),
-      switchMap(term => this.fakeCompanyApi(term)),
+      switchMap(term => this.getCorporatesData(term)),
       tap(() => this.companyLoading = false)
     );
-  }
-
-  fakeCompanyApi(term: string): Observable<string[]> {
-    // Simulate API call
-    return of(this.allCompanies.filter(c => c.toLowerCase().includes(term.toLowerCase()))).pipe(delay(500));
   }
 
   filterUsers(search: string | null, role: string | null) {

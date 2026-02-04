@@ -195,7 +195,7 @@
           <div class="row g-3 mb-4">
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">Select Company</label>
-               <ng-select [items]="companies$ | async"
+               <ng-select [items]="(companies$ | async) || []"
                           placeholder="Search Company"
                           formControlName="company"
                           [typeahead]="companyInput$"
