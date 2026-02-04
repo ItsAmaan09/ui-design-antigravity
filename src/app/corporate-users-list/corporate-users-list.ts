@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { combineLatest, startWith, map } from 'rxjs';
 
 interface User {
   initials: string;
@@ -22,11 +24,11 @@ interface RoleDef {
 @Component({
   selector: 'app-corporate-users-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './corporate-users-list.html',
   styleUrls: ['./corporate-users-list.scss']
 })
-export class CorporateUsersListComponent {
+export class CorporateUsersListComponent implements OnInit {
   businessName: string = 'Dahabshiil Business Services';
   businessId: string = 'BIZ-2024-001';
   businessType: string = 'Financial Services';
@@ -91,6 +93,35 @@ export class CorporateUsersListComponent {
       createdDate: '15/Jan/2026'
     }
   ];
+
+  filterForm = new FormGroup({
+    search: new FormControl(''),
+    role: new FormControl('All Roles')
+  });
+
+  filteredUsers: User[] = [];
+
+  ngOnInit() {
+    this.filteredUsers = this.users; // Initial state
+
+    combineLatest([
+      this.filterForm.controls.search.valueChanges.pipe(startWith('')),
+      this.filterForm.controls.role.valueChanges.pipe(startWith('All Roles'))
+    ]).subscribe(([search, role]) => {
+      this.filterUsers(search, role);
+    });
+  }
+
+  filterUsers(search: string | null, role: string | null) {
+    const searchTerm = (search || '').toLowerCase();
+    const roleTerm = role || 'All Roles';
+
+    this.filteredUsers = this.users.filter(user => {
+      const matchesSearch = user.name.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
+      const matchesRole = roleTerm === 'All Roles' || user.roles.includes(roleTerm);
+      return matchesSearch && matchesRole;
+    });
+  }
 
   getRoleClass(role: string): string {
     switch (role) {
