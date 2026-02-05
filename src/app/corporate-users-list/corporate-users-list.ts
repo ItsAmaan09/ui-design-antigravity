@@ -148,6 +148,12 @@ export class CorporateUsersListComponent implements OnInit {
     this.companies = []; 
   }
 
+  viewUser: User | null = null;
+
+  openViewModal(user: User) {
+    this.viewUser = user;
+  }
+
   openEditModal(user: User) {
     this.isEditMode = true;
     this.editingUserId = user.email; // Using email as ID for now

@@ -102,7 +102,9 @@
                     <i class="bi bi-pencil-square"></i>
                   </button>
                   <button class="btn btn-sm btn-light text-warning rounded-1 action-btn"><i class="bi bi-key"></i></button>
-                  <button class="btn btn-sm btn-light text-secondary rounded-1 action-btn"><i class="bi bi-slash-circle"></i></button>
+                  <button class="btn btn-sm btn-light text-secondary rounded-1 action-btn" data-bs-toggle="modal" data-bs-target="#viewUserModal" (click)="openViewModal(user)">
+                    <i class="bi bi-slash-circle"></i>
+                  </button>
                   <button class="btn btn-sm btn-light text-danger rounded-1 action-btn"><i class="bi bi-trash"></i></button>
                 </div>
               </td>
@@ -244,6 +246,101 @@
         </button>
       </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- View User Details Modal -->
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-bottom-0 pb-3 bg-light-subtle d-flex align-items-center">
+        <div>
+           <h5 class="modal-title fw-bold mb-0">User Details</h5>
+           <div class="small text-muted" *ngIf="viewUser">ID: {{ viewUser.email }}</div>
+        </div>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body p-4" *ngIf="viewUser">
+        
+        <!-- User Header Profile -->
+        <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-3 border">
+          <div class="avatar-circle bg-primary text-white fs-3 fw-bold d-flex align-items-center justify-content-center me-3" style="width: 64px; height: 64px;">
+             {{ viewUser.initials }}
+          </div>
+          <div>
+            <h5 class="fw-bold mb-0 text-dark">{{ viewUser.name }}</h5>
+            <div class="text-muted small mb-1">{{ viewUser.email }}</div>
+            <div class="d-flex gap-2">
+               <span class="badge rounded-pill fw-normal" [ngClass]="getStatusClass(viewUser.status)">{{ viewUser.status }}</span>
+               <span class="badge rounded-pill bg-dark text-white fw-normal" *ngFor="let r of viewUser.roles">{{ r }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4">
+           <!-- Column 1 -->
+           <div class="col-md-6">
+              <h6 class="text-uppercase text-secondary fw-bold small mb-3 border-bottom pb-2">Contact & Personal</h6>
+              
+              <div class="mb-3">
+                <label class="small text-muted d-block">Full Name</label>
+                <div class="fw-medium text-dark">{{ viewUser.name }}</div>
+              </div>
+              <div class="mb-3">
+                <label class="small text-muted d-block">Email Address</label>
+                <div class="fw-medium text-dark">{{ viewUser.email }}</div>
+              </div>
+              <div class="mb-3">
+                <label class="small text-muted d-block">Phone Number</label>
+                <div class="fw-medium text-dark">{{ viewUser.phone }}</div>
+              </div>
+               <div class="mb-3">
+                <label class="small text-muted d-block">Address</label>
+                <div class="fw-medium text-dark">{{ viewUser.address || 'N/A' }}</div>
+              </div>
+           </div>
+
+           <!-- Column 2 -->
+           <div class="col-md-6">
+              <h6 class="text-uppercase text-secondary fw-bold small mb-3 border-bottom pb-2">Business Info</h6>
+
+              <div class="mb-3">
+                <label class="small text-muted d-block">Company</label>
+                <div class="fw-medium text-dark">{{ viewUser.company || 'N/A' }}</div>
+              </div>
+
+               <div class="mb-3">
+                <label class="small text-muted d-block">Assigned Accounts</label>
+                <div *ngIf="viewUser.accounts?.length; else noAccounts">
+                   <ul class="list-unstyled mb-0">
+                     <li *ngFor="let acc of viewUser.accounts" class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-wallet2 text-secondary small"></i>
+                        <span class="fw-medium">{{ acc }}</span>
+                     </li>
+                   </ul>
+                </div>
+                <ng-template #noAccounts><span class="text-muted fst-italic">No accounts assigned</span></ng-template>
+              </div>
+
+              <div class="row g-2">
+                 <div class="col-6">
+                    <label class="small text-muted d-block">Created Date</label>
+                    <div class="fw-medium text-dark">{{ viewUser.createdDate }}</div>
+                 </div>
+                 <div class="col-6">
+                    <label class="small text-muted d-block">Last Login</label>
+                    <div class="fw-medium text-dark">{{ viewUser.lastLogin }}</div>
+                 </div>
+              </div>
+           </div>
+        </div>
+      </div>
+
+      <div class="modal-footer bg-light-subtle border-top-0">
+        <button type="button" class="btn btn-secondary px-4 fw-medium" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
 </div>
