@@ -31,7 +31,7 @@
           <button class="btn btn-outline-primary d-flex align-items-center gap-2">
             <i class="bi bi-eye"></i> View Roles Info
           </button>
-          <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createUserModal">
+          <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createUserModal" (click)="openCreateModal()">
             <i class="bi bi-plus-lg"></i> Create User
           </button>
         </div>
@@ -98,7 +98,9 @@
               <td class="text-dark small">{{ user.lastLogin }}</td>
               <td class="text-end pe-4">
                 <div class="d-flex justify-content-end gap-2">
-                  <button class="btn btn-sm btn-light text-primary rounded-1 action-btn"><i class="bi bi-pencil-square"></i></button>
+                  <button class="btn btn-sm btn-light text-primary rounded-1 action-btn" data-bs-toggle="modal" data-bs-target="#createUserModal" (click)="openEditModal(user)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
                   <button class="btn btn-sm btn-light text-warning rounded-1 action-btn"><i class="bi bi-key"></i></button>
                   <button class="btn btn-sm btn-light text-secondary rounded-1 action-btn"><i class="bi bi-slash-circle"></i></button>
                   <button class="btn btn-sm btn-light text-danger rounded-1 action-btn"><i class="bi bi-trash"></i></button>
@@ -118,7 +120,7 @@
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 8px; overflow: hidden;">
       <div class="modal-header border-bottom-0 pb-3 bg-dark text-white d-flex flex-column align-items-start justify-content-center" style="background-color: #0d47a1 !important;">
-        <h5 class="modal-title fw-bold mb-0" id="createUserModalLabel">Create New User</h5>
+        <h5 class="modal-title fw-bold mb-0" id="createUserModalLabel">{{ isEditMode ? 'Edit User' : 'Create New User' }}</h5>
         <div class="small opacity-75">for {{ businessName }}</div>
         <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -237,7 +239,9 @@
       </div>
       <div class="modal-footer border-top-0 px-4 pb-4 pt-2 bg-light-subtle">
         <button type="button" class="btn btn-outline-secondary px-5 py-2 rounded-3 fw-medium" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-secondary px-5 py-2 rounded-3 fw-medium ms-auto" [disabled]="createUserForm.invalid" [class.btn-primary]="createUserForm.valid" [class.btn-secondary]="createUserForm.invalid">Create User</button>
+        <button type="submit" class="btn btn-secondary px-5 py-2 rounded-3 fw-medium ms-auto" [disabled]="createUserForm.invalid" [class.btn-primary]="createUserForm.valid" [class.btn-secondary]="createUserForm.invalid">
+          {{ isEditMode ? 'Update User' : 'Create User' }}
+        </button>
       </div>
       </form>
     </div>

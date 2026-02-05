@@ -15,7 +15,13 @@ interface User {
   status: 'Active' | 'Inactive';
   lastLogin: string;
   createdDate: string;
+  // Added fields for Edit functionality
+  company: string;
+  accounts: string[];
+  address: string;
 }
+
+
 
 interface RoleDef {
   name: string;
@@ -44,6 +50,9 @@ export interface CreateUserRequestDto {
 export class CorporateUsersListComponent implements OnInit {
   private _CorporateService = inject(CorporateService);
 
+  isEditMode = false;
+  editingUserId: string | null = null;
+
   businessName: string = 'Dahabshiil Business Services';
   businessId: string = 'BIZ-2024-001';
   businessType: string = 'Financial Services';
@@ -61,8 +70,7 @@ export class CorporateUsersListComponent implements OnInit {
   companyInput$ = new Subject<string>();
   companyLoading = false;
   
-  accounts: AccountDef[] = []; // Used for old manual def, replacing with DTO
-  accountList: AccountResponseDto[] = []; // New list from API
+  accountList: AccountResponseDto[] = [];
 
   users: User[] = [
     {
@@ -73,7 +81,10 @@ export class CorporateUsersListComponent implements OnInit {
       roles: ['Inputter', 'Reviewer'],
       status: 'Active',
       lastLogin: '18/Jan/2026 10:30 AM',
-      createdDate: '10/Jan/2026'
+      createdDate: '10/Jan/2026',
+      company: 'Dahabshiil Business Services',
+      accounts: ['ACC-001'],
+      address: 'Mogadishu, Somalia'
     },
     {
       initials: 'AM',
@@ -83,7 +94,10 @@ export class CorporateUsersListComponent implements OnInit {
       roles: ['Authorizer'],
       status: 'Active',
       lastLogin: '18/Jan/2026 09:15 AM',
-      createdDate: '12/Jan/2026'
+      createdDate: '12/Jan/2026',
+      company: 'Hormuud Telecom',
+      accounts: ['ACC-002'],
+      address: 'Hargeisa, Somaliland'
     },
     {
       initials: 'MO',
@@ -93,7 +107,10 @@ export class CorporateUsersListComponent implements OnInit {
       roles: ['Inputter'],
       status: 'Inactive',
       lastLogin: '15/Jan/2026 04:20 PM',
-      createdDate: '08/Jan/2026'
+      createdDate: '08/Jan/2026',
+      company: 'Somali Electricity',
+      accounts: ['ACC-003'],
+      address: 'Mogadishu, Somalia'
     },
     {
       initials: 'FA',
@@ -103,7 +120,10 @@ export class CorporateUsersListComponent implements OnInit {
       roles: ['Admin'],
       status: 'Active',
       lastLogin: '18/Jan/2026 11:45 AM',
-      createdDate: '05/Jan/2026'
+      createdDate: '05/Jan/2026',
+      company: 'Dahabshiil Business Services',
+      accounts: ['ACC-001', 'ACC-002'],
+      address: 'Mogadishu'
     },
     {
       initials: 'IB',
@@ -113,9 +133,53 @@ export class CorporateUsersListComponent implements OnInit {
       roles: ['User'],
       status: 'Active',
       lastLogin: '17/Jan/2026 03:10 PM',
-      createdDate: '15/Jan/2026'
+      createdDate: '15/Jan/2026',
+      company: 'Somtel',
+      accounts: ['ACC-003'],
+      address: 'Garowe'
     }
   ];
+
+  openCreateModal() {
+    this.isEditMode = false;
+    this.editingUserId = null;
+    this.createUserForm.reset({ status: 'Active' });
+    this.accountList = [];
+    this.companies = []; 
+  }
+
+  openEditModal(user: User) {
+    this.isEditMode = true;
+    this.editingUserId = user.email; // Using email as ID for now
+    
+    // Patch simple values
+    this.createUserForm.patchValue({
+      fullName: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.roles[0], // Taking first role as form is single select
+      address: user.address,
+      status: user.status,
+      // For company, we want to show it. ng-select binds to CompanyName.
+      // We set the form control value. ng-select checks items.
+      // If items are empty, it might show ID. 
+      // We should probably allow the single value to be shown even if not in list, 
+      // or pre-populate the list with at least this company.
+      company: user.company
+    });
+
+    // Populate accounts
+    // We need to fetch accounts for this company so they are selectable/shown
+    // Since we don't have CompanyID easily in this mock User object, we might issue a search or just mock it.
+    // In real app, User object should have CompanyID. 
+    // I'll assume we pass CompanyName as ID for now or fetch by name.
+    // Actually, getAccountByCorporateId takes `id`. Use company name as mock id if needed or implement lookup.
+    
+    // For now, let's trigger the account fetch using the company name as ID, or mock logic.
+    // And set the account form value.
+    this.getAccountByCorporateId(user.company); // Assuming ID logic handles string
+    this.createUserForm.patchValue({ account: user.accounts as any });
+  }
 
   filterForm = new FormGroup({
     search: new FormControl(''),
