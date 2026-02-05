@@ -154,6 +154,23 @@ export class CorporateUsersListComponent implements OnInit {
     this.viewUser = user;
   }
 
+  deletingUser: User | null = null;
+  
+  openDeleteModal(user: User) {
+    this.deletingUser = user;
+  }
+
+  confirmDelete() {
+    if (this.deletingUser) {
+      console.log('Deleting user with ID (mock):', this.deletingUser.email);
+      // API call will go here
+      // this._CorporateService.deleteUser(this.deletingUser.email).subscribe(...)
+      
+      // Optionally remove from local list for immediate feedback or reload list
+      this.deletingUser = null;
+    }
+  }
+
   openEditModal(user: User) {
     this.isEditMode = true;
     this.editingUserId = user.email; // Using email as ID for now
