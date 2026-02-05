@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { combineLatest, startWith, map, Observable, Subject, of, debounceTime, distinctUntilChanged, switchMap, tap, delay, filter, catchError } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { CorporateService, CompanyResponseDto } from '../services/corporate';
+import { CorporateService, CompanyResponseDto, AccountResponseDto } from '../services/corporate';
 
 interface User {
   initials: string;
@@ -21,11 +21,6 @@ interface RoleDef {
   name: string;
   badgeClass: string;
   description: string;
-}
-
-interface AccountDef {
-  id: string;
-  name: string;
 }
 
 export interface CreateUserRequestDto {
@@ -66,11 +61,8 @@ export class CorporateUsersListComponent implements OnInit {
   companyInput$ = new Subject<string>();
   companyLoading = false;
   
-  accounts: AccountDef[] = [
-    { id: 'ACC-001', name: 'ACC-001 (Main)' },
-    { id: 'ACC-002', name: 'ACC-002 (Payroll)' },
-    { id: 'ACC-003', name: 'ACC-003 (Petty Cash)' }
-  ];
+  accounts: AccountDef[] = []; // Used for old manual def, replacing with DTO
+  accountList: AccountResponseDto[] = []; // New list from API
 
   users: User[] = [
     {
@@ -245,12 +237,33 @@ export class CorporateUsersListComponent implements OnInit {
         role: formValue.role!,
         address: formValue.address!,
         company: formValue.company!,
-        accounts: formValue.account as unknown as string[], // Cast because form value inference can be tricky with multi-select
+        accounts: formValue.account as unknown as string[], 
         status: (formValue.status as 'Active' | 'Inactive') || 'Active'
       };
 
       console.log('API Payload:', payload);
       // Here you would call: this.userService.createUser(payload).subscribe(...)
     }
+  }
+
+  onCompanyChange(company: CompanyResponseDto) {
+    // Reset accounts selection
+    this.createUserForm.patchValue({ account: [] });
+    this.accountList = [];
+
+    if (company && company.CompanyId) {
+      this.getAccountByCorporateId(company.CompanyId);
+    }
+  }
+
+  getAccountByCorporateId(id: string) {
+    this._CorporateService.getAccountsByCorporateIdAsync({ CompanyId: id }).subscribe({
+      next: (response) => {
+        this.accountList = response.Data;
+      },
+      error: (error) => {
+        console.error('Error fetching accounts:', error);
+      },
+    });
   }
 }

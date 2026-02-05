@@ -196,12 +196,15 @@
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">Select Company</label>
                <ng-select [items]="(companies$ | async) || []"
+                          bindLabel="CompanyName"
+                          bindValue="CompanyName"
                           placeholder="Search Company"
                           formControlName="company"
                           [typeahead]="companyInput$"
                           [loading]="companyLoading"
                           [minTermLength]="3"
                           typeToSearchText="Please enter 3 or more characters"
+                          (change)="onCompanyChange($event)"
                           [class.is-invalid]="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched">
                </ng-select>
                <div *ngIf="createUserForm.get('company')?.invalid && createUserForm.get('company')?.touched" class="text-danger small mt-1">
@@ -210,9 +213,9 @@
             </div>
             <div class="col-md-6">
                <label class="form-label fw-bold small text-dark">List of Accounts</label>
-               <ng-select [items]="accounts"
-                          bindLabel="name"
-                          bindValue="id"
+               <ng-select [items]="accountList"
+                          bindLabel="AccountName"
+                          bindValue="AccountId"
                           [multiple]="true"
                           placeholder="Select Accounts"
                           formControlName="account"
