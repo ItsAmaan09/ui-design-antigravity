@@ -19,6 +19,9 @@ interface Role {
 })
 export class CorporateUserRoles implements OnInit {
   
+  // Make Math available in template
+  Math = Math;
+  
   roles: Role[] = [
     { id: '1', name: 'doctor', description: 'N/A' },
     { id: '2', name: 'Tester', description: 'N/A' },
