@@ -438,6 +438,7 @@ export class CorporateUserRoles implements OnInit {
     this.editingRoleId = null;
     this.roleForm.reset();
     this.resetPermissions();
+    this.resetModalTabs();
   }
 
   openEditModal(role: Role) {
@@ -451,6 +452,7 @@ export class CorporateUserRoles implements OnInit {
     
     // Reset all permissions first
     this.resetPermissions();
+    this.resetModalTabs();
 
     // Map role's permissions back to menuData if they exist
     if (role.MenuPermissions && role.MenuPermissions.length > 0) {
@@ -502,6 +504,17 @@ export class CorporateUserRoles implements OnInit {
         });
       }
     });
+  }
+
+  private resetModalTabs() {
+    // Reset Bootstrap tab to first tab
+    setTimeout(() => {
+      const firstTabEl = document.getElementById('properties-tab');
+      if (firstTabEl) {
+        // Trigger click on the tab button to let Bootstrap handle the switch
+        firstTabEl.click();
+      }
+    }, 0);
   }
 
   openDeleteModal(role: Role) {
