@@ -9,6 +9,7 @@ interface Role {
   name: string;
   description: string;
   isSystem?: boolean;
+  MenuPermissions?: any[];
 }
 
 interface MenuItem {
@@ -44,7 +45,15 @@ export class CorporateUserRoles implements OnInit {
   Math = Math;
   
   roles: Role[] = [
-    { id: '1', name: 'doctor', description: 'N/A' },
+    { 
+      id: '1', 
+      name: 'doctor', 
+      description: 'N/A',
+      MenuPermissions: [
+        { MenuId: 1, CanView: true, CanCreate: false, CanEdit: false, CanDelete: false, CanApprove: false },
+        { MenuId: 7, CanView: true, CanCreate: true, CanEdit: true, CanDelete: false, CanApprove: false }
+      ]
+    },
     { id: '2', name: 'Tester', description: 'N/A' },
     { id: '3', name: 'Outstatistic', description: 'PGP' },
     { id: '4', name: 'Generic', description: 'N/A' },
@@ -428,14 +437,70 @@ export class CorporateUserRoles implements OnInit {
     this.isEditMode = false;
     this.editingRoleId = null;
     this.roleForm.reset();
+    this.resetPermissions();
   }
 
   openEditModal(role: Role) {
+    console.log('Editing Role:', role.name, 'Permissions:', role.MenuPermissions);
     this.isEditMode = true;
     this.editingRoleId = role.id;
     this.roleForm.patchValue({
       name: role.name,
       description: role.description
+    });
+    
+    // Reset all permissions first
+    this.resetPermissions();
+
+    // Map role's permissions back to menuData if they exist
+    if (role.MenuPermissions && role.MenuPermissions.length > 0) {
+      role.MenuPermissions.forEach(perm => {
+        // Find the corresponding menu item in the recursive structure
+        this.updateMenuPermissionInList(this.menuData, perm);
+      });
+    }
+
+    // Force a fresh reference to trigger change detection just in case
+    this.menuData = [...this.menuData];
+  }
+
+  private updateMenuPermissionInList(menus: MenuItem[], perm: any) {
+    for (const menu of menus) {
+      if (menu.MenuId === perm.MenuId) {
+        menu.CanView = perm.CanView;
+        menu.CanCreate = perm.CanCreate;
+        menu.CanEdit = perm.CanEdit;
+        menu.CanDelete = perm.CanDelete;
+        menu.CanApprove = perm.CanApprove;
+        console.log(`Mapped permissions for MenuId ${perm.MenuId}:`, menu.Title);
+        return true; 
+      }
+      if (menu.Children && menu.Children.length > 0) {
+        if (this.updateMenuPermissionInList(menu.Children, perm)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private resetPermissions() {
+    this.menuData.forEach(menu => {
+      menu.CanView = false;
+      menu.CanCreate = false;
+      menu.CanEdit = false;
+      menu.CanDelete = false;
+      menu.CanApprove = false;
+      
+      if (menu.Children) {
+        menu.Children.forEach(child => {
+          child.CanView = false;
+          child.CanCreate = false;
+          child.CanEdit = false;
+          child.CanDelete = false;
+          child.CanApprove = false;
+        });
+      }
     });
   }
 
@@ -497,7 +562,8 @@ export class CorporateUserRoles implements OnInit {
           this.roles[index] = {
             ...this.roles[index],
             name: formValue.name!,
-            description: formValue.description!
+            description: formValue.description!,
+            MenuPermissions: menuPermissions // Save permissions for local "persistence"
           };
         }
         console.log('Updated role:', this.editingRoleId);
@@ -506,7 +572,8 @@ export class CorporateUserRoles implements OnInit {
         const newRole: Role = {
           id: (this.roles.length + 1).toString(),
           name: formValue.name!,
-          description: formValue.description!
+          description: formValue.description!,
+          MenuPermissions: menuPermissions // Save permissions for local "persistence"
         };
         this.roles.push(newRole);
         console.log('Created role:', newRole);
