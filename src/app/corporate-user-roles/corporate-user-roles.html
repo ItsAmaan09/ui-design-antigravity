@@ -173,44 +173,117 @@
                        [formControl]="permissionSearch">
               </div>
               
-              <div class="permissions-tree">
-                <!-- Dynamic Menu Items -->
-                <div class="permission-group mb-3" *ngFor="let menu of menuData">
-                  <div class="d-flex align-items-center mb-2 cursor-pointer">
-                    <i class="me-2 text-muted small" 
-                       [class.bi-chevron-down]="menu.expanded"
-                       [class.bi-chevron-right]="!menu.expanded"
-                       (click)="toggleMenuExpansion(menu)"></i>
-                    <input type="checkbox" 
-                           class="form-check-input me-2" 
-                           [id]="'menu-' + menu.MenuId"
-                           [checked]="menu.checked"
-                           [indeterminate]="menu.indeterminate"
-                           (change)="toggleMenuCheck(menu, $event)">
-                    <label class="form-check-label fw-medium mb-0 cursor-pointer" 
-                           [for]="'menu-' + menu.MenuId"
-                           (click)="toggleMenuExpansion(menu)">
-                      <i class="bi bi-{{ menu.Icon }} me-2" *ngIf="menu.Icon"></i>
-                      {{ menu.Title }}
-                    </label>
-                  </div>
-                  
-                  <!-- Children Menu Items -->
-                  <div class="ms-4" *ngIf="menu.expanded && menu.Children && menu.Children.length > 0">
-                    <div class="permission-subgroup mb-2" *ngFor="let child of menu.Children">
-                      <div class="form-check">
-                        <input class="form-check-input" 
-                               type="checkbox" 
-                               [id]="'menu-' + child.MenuId"
-                               [checked]="child.checked"
-                               (change)="toggleMenuCheck(child, $event)">
-                        <label class="form-check-label" [for]="'menu-' + child.MenuId">
-                          {{ child.Title }}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="permissions-container" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-sm table-bordered mb-0">
+                  <thead class="table-light sticky-top">
+                    <tr>
+                      <th style="width: 30%;">Menu</th>
+                      <th class="text-center" style="width: 14%;">
+                        <i class="bi bi-eye me-1"></i>View
+                      </th>
+                      <th class="text-center" style="width: 14%;">
+                        <i class="bi bi-plus-circle me-1"></i>Create
+                      </th>
+                      <th class="text-center" style="width: 14%;">
+                        <i class="bi bi-pencil me-1"></i>Edit
+                      </th>
+                      <th class="text-center" style="width: 14%;">
+                        <i class="bi bi-trash me-1"></i>Delete
+                      </th>
+                      <th class="text-center" style="width: 14%;">
+                        <i class="bi bi-check-circle me-1"></i>Approve
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Parent Menu Items -->
+                    <ng-container *ngFor="let menu of menuData">
+                      <tr class="table-active">
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <i class="bi me-2 text-muted cursor-pointer" 
+                               [class.bi-chevron-down]="menu.expanded"
+                               [class.bi-chevron-right]="!menu.expanded"
+                               (click)="toggleMenuExpansion(menu)"
+                               *ngIf="menu.Children && menu.Children.length > 0"></i>
+                            <i class="bi bi-{{ menu.Icon }} me-2" *ngIf="menu.Icon"></i>
+                            <strong>{{ menu.Title }}</strong>
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <input type="checkbox" 
+                                 class="form-check-input" 
+                                 [(ngModel)]="menu.CanView"
+                                 [ngModelOptions]="{standalone: true}">
+                        </td>
+                        <td class="text-center">
+                          <input type="checkbox" 
+                                 class="form-check-input" 
+                                 [(ngModel)]="menu.CanCreate"
+                                 [ngModelOptions]="{standalone: true}">
+                        </td>
+                        <td class="text-center">
+                          <input type="checkbox" 
+                                 class="form-check-input" 
+                                 [(ngModel)]="menu.CanEdit"
+                                 [ngModelOptions]="{standalone: true}">
+                        </td>
+                        <td class="text-center">
+                          <input type="checkbox" 
+                                 class="form-check-input" 
+                                 [(ngModel)]="menu.CanDelete"
+                                 [ngModelOptions]="{standalone: true}">
+                        </td>
+                        <td class="text-center">
+                          <input type="checkbox" 
+                                 class="form-check-input" 
+                                 [(ngModel)]="menu.CanApprove"
+                                 [ngModelOptions]="{standalone: true}">
+                        </td>
+                      </tr>
+                      
+                      <!-- Child Menu Items -->
+                      <ng-container *ngIf="menu.expanded && menu.Children && menu.Children.length > 0">
+                        <tr *ngFor="let child of menu.Children">
+                          <td class="ps-5">
+                            <i class="bi bi-arrow-return-right me-2 text-muted"></i>
+                            {{ child.Title }}
+                          </td>
+                          <td class="text-center">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   [(ngModel)]="child.CanView"
+                                   [ngModelOptions]="{standalone: true}">
+                          </td>
+                          <td class="text-center">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   [(ngModel)]="child.CanCreate"
+                                   [ngModelOptions]="{standalone: true}">
+                          </td>
+                          <td class="text-center">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   [(ngModel)]="child.CanEdit"
+                                   [ngModelOptions]="{standalone: true}">
+                          </td>
+                          <td class="text-center">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   [(ngModel)]="child.CanDelete"
+                                   [ngModelOptions]="{standalone: true}">
+                          </td>
+                          <td class="text-center">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   [(ngModel)]="child.CanApprove"
+                                   [ngModelOptions]="{standalone: true}">
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                </table>
 
                 <!-- Empty State -->
                 <div class="text-center text-muted py-4" *ngIf="menuData.length === 0">

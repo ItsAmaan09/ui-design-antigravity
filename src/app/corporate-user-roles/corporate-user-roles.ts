@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
+
 
 interface Role {
   id: string;
@@ -22,12 +23,18 @@ interface MenuItem {
   expanded?: boolean;
   checked?: boolean;
   indeterminate?: boolean;
+  // Permission flags
+  CanView?: boolean;
+  CanCreate?: boolean;
+  CanEdit?: boolean;
+  CanDelete?: boolean;
+  CanApprove?: boolean;
 }
 
 @Component({
   selector: 'app-corporate-user-roles',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule],
   templateUrl: './corporate-user-roles.html',
   styleUrl: './corporate-user-roles.scss',
 })
@@ -314,7 +321,21 @@ export class CorporateUserRoles implements OnInit {
       ...menu,
       expanded: true,
       checked: false,
-      indeterminate: false
+      indeterminate: false,
+      CanView: false,
+      CanCreate: false,
+      CanEdit: false,
+      CanDelete: false,
+      CanApprove: false,
+      Children: menu.Children.map(child => ({
+        ...child,
+        checked: false,
+        CanView: false,
+        CanCreate: false,
+        CanEdit: false,
+        CanDelete: false,
+        CanApprove: false
+      }))
     }));
   }
 
@@ -425,6 +446,49 @@ export class CorporateUserRoles implements OnInit {
   onSubmit() {
     if (this.roleForm.valid) {
       const formValue = this.roleForm.value;
+      
+      // Collect all menu permissions (parent and children)
+      const menuPermissions: any[] = [];
+      
+      this.menuData.forEach(menu => {
+        // Add parent menu if it has any permission enabled
+        if (menu.CanView || menu.CanCreate || menu.CanEdit || menu.CanDelete || menu.CanApprove) {
+          menuPermissions.push({
+            MenuId: menu.MenuId,
+            CanView: menu.CanView || false,
+            CanCreate: menu.CanCreate || false,
+            CanEdit: menu.CanEdit || false,
+            CanDelete: menu.CanDelete || false,
+            CanApprove: menu.CanApprove || false
+          });
+        }
+        
+        // Add child menus if they have any permission enabled
+        if (menu.Children && menu.Children.length > 0) {
+          menu.Children.forEach(child => {
+            if (child.CanView || child.CanCreate || child.CanEdit || child.CanDelete || child.CanApprove) {
+              menuPermissions.push({
+                MenuId: child.MenuId,
+                CanView: child.CanView || false,
+                CanCreate: child.CanCreate || false,
+                CanEdit: child.CanEdit || false,
+                CanDelete: child.CanDelete || false,
+                CanApprove: child.CanApprove || false
+              });
+            }
+          });
+        }
+      });
+      
+      // Create API payload
+      const apiPayload = {
+        RoleName: formValue.name,
+        RoleCode: formValue.name?.toUpperCase().replace(/\s+/g, '_'), // Generate role code from name
+        Description: formValue.description,
+        MenuPermissions: menuPermissions
+      };
+      
+      console.log('API Payload:', JSON.stringify(apiPayload, null, 2));
       
       if (this.isEditMode && this.editingRoleId) {
         // Update existing role
