@@ -167,102 +167,55 @@
             <!-- Permissions Tab -->
             <div class="tab-pane fade" id="permissions" role="tabpanel">
               <div class="mb-3">
-                <input type="text" class="form-control" placeholder="Search permissions...">
+                <input type="text" 
+                       class="form-control" 
+                       placeholder="Search permissions..." 
+                       [formControl]="permissionSearch">
               </div>
               
               <div class="permissions-tree">
-                <!-- Pages Section -->
-                <div class="permission-group mb-3">
-                  <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-chevron-down me-2 text-muted small"></i>
-                    <input type="checkbox" class="form-check-input me-2" id="pages-all">
-                    <label class="form-check-label fw-medium" for="pages-all">Pages</label>
+                <!-- Dynamic Menu Items -->
+                <div class="permission-group mb-3" *ngFor="let menu of menuData">
+                  <div class="d-flex align-items-center mb-2 cursor-pointer">
+                    <i class="me-2 text-muted small" 
+                       [class.bi-chevron-down]="menu.expanded"
+                       [class.bi-chevron-right]="!menu.expanded"
+                       (click)="toggleMenuExpansion(menu)"></i>
+                    <input type="checkbox" 
+                           class="form-check-input me-2" 
+                           [id]="'menu-' + menu.MenuId"
+                           [checked]="menu.checked"
+                           [indeterminate]="menu.indeterminate"
+                           (change)="toggleMenuCheck(menu, $event)">
+                    <label class="form-check-label fw-medium mb-0 cursor-pointer" 
+                           [for]="'menu-' + menu.MenuId"
+                           (click)="toggleMenuExpansion(menu)">
+                      <i class="bi bi-{{ menu.Icon }} me-2" *ngIf="menu.Icon"></i>
+                      {{ menu.Title }}
+                    </label>
                   </div>
                   
-                  <!-- Chart of Accounts -->
-                  <div class="permission-subgroup ms-4 mb-2">
-                    <div class="d-flex align-items-center mb-2">
-                      <i class="bi bi-chevron-down me-2 text-muted small"></i>
-                      <input type="checkbox" class="form-check-input me-2" id="chart-accounts">
-                      <label class="form-check-label" for="chart-accounts">Chart of Accounts</label>
-                    </div>
-                    <div class="ms-4">
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="chart-approver">
-                        <label class="form-check-label small text-muted" for="chart-approver">Approver</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="chart-add">
-                        <label class="form-check-label small text-muted" for="chart-add">Add</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="chart-view">
-                        <label class="form-check-label small text-muted" for="chart-view">View</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="chart-edit">
-                        <label class="form-check-label small text-muted" for="chart-edit">Edit</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="chart-delete">
-                        <label class="form-check-label small text-muted" for="chart-delete">Delete</label>
+                  <!-- Children Menu Items -->
+                  <div class="ms-4" *ngIf="menu.expanded && menu.Children && menu.Children.length > 0">
+                    <div class="permission-subgroup mb-2" *ngFor="let child of menu.Children">
+                      <div class="form-check">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               [id]="'menu-' + child.MenuId"
+                               [checked]="child.checked"
+                               (change)="toggleMenuCheck(child, $event)">
+                        <label class="form-check-label" [for]="'menu-' + child.MenuId">
+                          {{ child.Title }}
+                        </label>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Manage Partner Mapping -->
-                  <div class="permission-subgroup ms-4 mb-2">
-                    <div class="d-flex align-items-center mb-2">
-                      <i class="bi bi-chevron-down me-2 text-muted small"></i>
-                      <input type="checkbox" class="form-check-input me-2" id="partner-mapping">
-                      <label class="form-check-label" for="partner-mapping">Manage Partner Mapping</label>
-                    </div>
-                    <div class="ms-4">
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="partner-approver">
-                        <label class="form-check-label small text-muted" for="partner-approver">Approver</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="partner-add">
-                        <label class="form-check-label small text-muted" for="partner-add">Add</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="partner-view">
-                        <label class="form-check-label small text-muted" for="partner-view">View</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="partner-edit">
-                        <label class="form-check-label small text-muted" for="partner-edit">Edit</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="partner-delete">
-                        <label class="form-check-label small text-muted" for="partner-delete">Delete</label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Manage Card -->
-                  <div class="permission-subgroup ms-4 mb-2">
-                    <div class="d-flex align-items-center mb-2">
-                      <i class="bi bi-chevron-down me-2 text-muted small"></i>
-                      <input type="checkbox" class="form-check-input me-2" id="manage-card">
-                      <label class="form-check-label" for="manage-card">Manage Card</label>
-                    </div>
-                    <div class="ms-4">
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="card-approver">
-                        <label class="form-check-label small text-muted" for="card-approver">Approver</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="card-add">
-                        <label class="form-check-label small text-muted" for="card-add">Add</label>
-                      </div>
-                      <div class="form-check mb-1">
-                        <input class="form-check-input" type="checkbox" id="card-view">
-                        <label class="form-check-label small text-muted" for="card-view">View</label>
-                      </div>
-                    </div>
-                  </div>
+                <!-- Empty State -->
+                <div class="text-center text-muted py-4" *ngIf="menuData.length === 0">
+                  <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                  No menu items available
                 </div>
               </div>
             </div>

@@ -128,12 +128,14 @@
     padding-left: 0.5rem;
   }
   
-  i.bi-chevron-down {
+  i.bi-chevron-down,
+  i.bi-chevron-right {
     cursor: pointer;
     transition: transform 0.2s ease;
-    
-    &.collapsed {
-      transform: rotate(-90deg);
-    }
   }
+}
+
+// Utility classes
+.cursor-pointer {
+  cursor: pointer;
 }

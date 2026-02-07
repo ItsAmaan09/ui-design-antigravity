@@ -10,6 +10,20 @@ interface Role {
   isSystem?: boolean;
 }
 
+interface MenuItem {
+  MenuId: number;
+  MenuCode: string;
+  Title: string;
+  Route: string;
+  Icon: string | null;
+  SortOrder: number;
+  Children: MenuItem[];
+  // For UI state
+  expanded?: boolean;
+  checked?: boolean;
+  indeterminate?: boolean;
+}
+
 @Component({
   selector: 'app-corporate-user-roles',
   standalone: true,
@@ -41,6 +55,8 @@ export class CorporateUserRoles implements OnInit {
     search: new FormControl('')
   });
 
+  permissionSearch = new FormControl('');
+
   roleForm = new FormGroup({
     name: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required)
@@ -49,6 +65,9 @@ export class CorporateUserRoles implements OnInit {
   isEditMode = false;
   editingRoleId: string | null = null;
   deletingRole: Role | null = null;
+
+  // Menu data for permissions
+  menuData: MenuItem[] = [];
 
   // Pagination
   currentPage = 1;
@@ -61,6 +80,289 @@ export class CorporateUserRoles implements OnInit {
 
     this.searchForm.controls.search.valueChanges.subscribe(searchTerm => {
       this.filterRoles(searchTerm);
+    });
+
+    // Load menu data (simulating API response for now)
+    this.loadMenuData();
+  }
+
+  loadMenuData() {
+    // This would typically come from an API call
+    // For now, using the provided API response structure
+    const apiResponse = {
+      "Success": true,
+      "StatusCode": 200,
+      "Message": "Success",
+      "Data": [
+        {
+          "MenuId": 1,
+          "MenuCode": "DASHBOARD",
+          "Title": "Dashboard",
+          "Route": "/dashboard",
+          "Icon": "dashboard",
+          "SortOrder": 1,
+          "Children": []
+        },
+        {
+          "MenuId": 2,
+          "MenuCode": "REPORTS",
+          "Title": "Reports",
+          "Route": "/reports",
+          "Icon": "bar_chart",
+          "SortOrder": 2,
+          "Children": [
+            {
+              "MenuId": 7,
+              "MenuCode": "REPORT_STATEMENT",
+              "Title": "Statement",
+              "Route": "/reports/statement",
+              "Icon": null,
+              "SortOrder": 1,
+              "Children": []
+            },
+            {
+              "MenuId": 8,
+              "MenuCode": "REPORT_TRANSACTIONS",
+              "Title": "Transactions",
+              "Route": "/reports/transactions",
+              "Icon": null,
+              "SortOrder": 2,
+              "Children": []
+            }
+          ]
+        },
+        {
+          "MenuId": 3,
+          "MenuCode": "PAYROLL",
+          "Title": "Payroll",
+          "Route": "/payroll",
+          "Icon": "payments",
+          "SortOrder": 3,
+          "Children": [
+            {
+              "MenuId": 9,
+              "MenuCode": "PAYROLL_BENEFICIARY",
+              "Title": "Manage Beneficiary",
+              "Route": "/payroll/manage-beneficiary",
+              "Icon": null,
+              "SortOrder": 1,
+              "Children": []
+            },
+            {
+              "MenuId": 10,
+              "MenuCode": "PAYROLL_GROUP",
+              "Title": "Manage Group",
+              "Route": "/payroll/manage-group",
+              "Icon": null,
+              "SortOrder": 2,
+              "Children": []
+            },
+            {
+              "MenuId": 11,
+              "MenuCode": "PAYROLL_SEND",
+              "Title": "Send Payroll",
+              "Route": "/payroll/send-payroll",
+              "Icon": null,
+              "SortOrder": 3,
+              "Children": []
+            },
+            {
+              "MenuId": 12,
+              "MenuCode": "PAYROLL_APPROVE",
+              "Title": "Approve Payroll",
+              "Route": "/payroll/approve-payroll",
+              "Icon": null,
+              "SortOrder": 4,
+              "Children": []
+            },
+            {
+              "MenuId": 13,
+              "MenuCode": "PAYROLL_ADVANCE",
+              "Title": "Advance Payroll",
+              "Route": "/payroll/advance-payroll",
+              "Icon": null,
+              "SortOrder": 5,
+              "Children": []
+            },
+            {
+              "MenuId": 14,
+              "MenuCode": "PAYROLL_HISTORY",
+              "Title": "History",
+              "Route": "/payroll/history",
+              "Icon": null,
+              "SortOrder": 6,
+              "Children": []
+            }
+          ]
+        },
+        {
+          "MenuId": 4,
+          "MenuCode": "PAYMENT",
+          "Title": "Payment",
+          "Route": "/payment",
+          "Icon": "account_balance_wallet",
+          "SortOrder": 4,
+          "Children": [
+            {
+              "MenuId": 15,
+              "MenuCode": "PAYMENT_TRANSFER",
+              "Title": "Transfer",
+              "Route": "/payment/transfer",
+              "Icon": null,
+              "SortOrder": 1,
+              "Children": []
+            },
+            {
+              "MenuId": 16,
+              "MenuCode": "PAYMENT_APPROVE",
+              "Title": "Approve / Release",
+              "Route": "/payment/approve",
+              "Icon": null,
+              "SortOrder": 2,
+              "Children": []
+            },
+            {
+              "MenuId": 17,
+              "MenuCode": "PAYMENT_HISTORY",
+              "Title": "History",
+              "Route": "/payment/history",
+              "Icon": null,
+              "SortOrder": 3,
+              "Children": []
+            }
+          ]
+        },
+        {
+          "MenuId": 5,
+          "MenuCode": "USERS",
+          "Title": "Users",
+          "Route": "/users",
+          "Icon": "groups",
+          "SortOrder": 5,
+          "Children": [
+            {
+              "MenuId": 18,
+              "MenuCode": "USERS_MANAGE",
+              "Title": "Manage Users",
+              "Route": "/users/manage-users",
+              "Icon": null,
+              "SortOrder": 1,
+              "Children": []
+            },
+            {
+              "MenuId": 19,
+              "MenuCode": "USERS_ASSIGN_ACCOUNTS",
+              "Title": "Assign Accounts",
+              "Route": "/users/assign-accounts",
+              "Icon": null,
+              "SortOrder": 2,
+              "Children": []
+            }
+          ]
+        },
+        {
+          "MenuId": 6,
+          "MenuCode": "SETTINGS",
+          "Title": "Settings",
+          "Route": "/settings",
+          "Icon": "settings",
+          "SortOrder": 6,
+          "Children": [
+            {
+              "MenuId": 20,
+              "MenuCode": "SETTINGS_PROFILE",
+              "Title": "Profile",
+              "Route": "/settings/profile",
+              "Icon": null,
+              "SortOrder": 1,
+              "Children": []
+            },
+            {
+              "MenuId": 21,
+              "MenuCode": "SETTINGS_CHANGE_PASSWORD",
+              "Title": "Change Password",
+              "Route": "/settings/change-password",
+              "Icon": null,
+              "SortOrder": 2,
+              "Children": []
+            },
+            {
+              "MenuId": 22,
+              "MenuCode": "SETTINGS_TICKET",
+              "Title": "Send Ticket",
+              "Route": "/settings/send-ticket",
+              "Icon": null,
+              "SortOrder": 3,
+              "Children": []
+            },
+            {
+              "MenuId": 23,
+              "MenuCode": "SETTINGS_LOGOUT",
+              "Title": "Logout",
+              "Route": "/settings/logout",
+              "Icon": null,
+              "SortOrder": 4,
+              "Children": []
+            }
+          ]
+        }
+      ]
+    };
+
+    // Initialize menu data with UI state
+    this.menuData = apiResponse.Data.map(menu => ({
+      ...menu,
+      expanded: true,
+      checked: false,
+      indeterminate: false
+    }));
+  }
+
+  toggleMenuExpansion(menu: MenuItem) {
+    menu.expanded = !menu.expanded;
+  }
+
+  toggleMenuCheck(menu: MenuItem, event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    menu.checked = checkbox.checked;
+    menu.indeterminate = false;
+
+    // Update all children
+    if (menu.Children && menu.Children.length > 0) {
+      this.updateChildrenCheckState(menu.Children, checkbox.checked);
+    }
+
+    // Update parent state if needed
+    this.updateParentCheckState();
+  }
+
+  private updateChildrenCheckState(children: MenuItem[], checked: boolean) {
+    children.forEach(child => {
+      child.checked = checked;
+      child.indeterminate = false;
+      if (child.Children && child.Children.length > 0) {
+        this.updateChildrenCheckState(child.Children, checked);
+      }
+    });
+  }
+
+  private updateParentCheckState() {
+    // This would update parent indeterminate states based on children
+    // For simplicity, implementing basic version
+    this.menuData.forEach(menu => {
+      if (menu.Children && menu.Children.length > 0) {
+        const checkedChildren = menu.Children.filter(c => c.checked).length;
+        if (checkedChildren === 0) {
+          menu.checked = false;
+          menu.indeterminate = false;
+        } else if (checkedChildren === menu.Children.length) {
+          menu.checked = true;
+          menu.indeterminate = false;
+        } else {
+          menu.checked = false;
+          menu.indeterminate = true;
+        }
+      }
     });
   }
 
@@ -146,7 +448,7 @@ export class CorporateUserRoles implements OnInit {
         console.log('Created role:', newRole);
       }
       
-      this.filterRoles(this.searchForm.value.search);
+      this.filterRoles(this.searchForm.value.search ?? '');
       this.roleForm.reset();
     }
   }
@@ -155,7 +457,7 @@ export class CorporateUserRoles implements OnInit {
     if (this.deletingRole) {
       console.log('Deleting role:', this.deletingRole.id);
       this.roles = this.roles.filter(r => r.id !== this.deletingRole!.id);
-      this.filterRoles(this.searchForm.value.search);
+      this.filterRoles(this.searchForm.value.search ?? '');
       this.deletingRole = null;
     }
   }
