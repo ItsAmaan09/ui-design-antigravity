@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { CorporateDataService } from '../services/corporate-data';
 
 interface StatCard {
   title: string;
@@ -32,6 +33,11 @@ interface Business {
   styleUrls: ['./corporate-customers.component.scss']
 })
 export class CorporateCustomersComponent {
+  
+  constructor(
+    private corporateDataService: CorporateDataService,
+    private router: Router
+  ) {}
   stats: StatCard[] = [
     { title: 'Total Businesses', value: 7, icon: 'bi-building', statusColor: 'text-primary' },
     { title: 'Active Businesses', value: 6, icon: 'bi-check-circle', statusColor: 'text-success' },
@@ -110,5 +116,19 @@ export class CorporateCustomersComponent {
 
   viewBusiness(business: Business) {
     this.selectedBusiness = business;
+  }
+
+  navigateToCorporate(business: Business) {
+    // Set the corporate data in the service
+    this.corporateDataService.setSelectedCorporate({
+      id: business.id,
+      name: business.name,
+      code: business.id,
+      type: business.type,
+      status: business.status
+    });
+    
+    // Navigate to manage-corporate page
+    this.router.navigate(['/corporate-customers', business.id, 'manage']);
   }
 }

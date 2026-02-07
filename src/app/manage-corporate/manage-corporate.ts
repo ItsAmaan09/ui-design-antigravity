@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CorporateDataService } from '../services/corporate-data';
 
 interface StatCard {
   title: string;
@@ -178,9 +179,27 @@ export class ManageCorporate implements OnInit {
   ];
 
   ngOnInit() {
-    this.corporateId = this.route.snapshot.paramMap.get('id') || '';
-    // In a real app, you would fetch corporate details based on this ID
+    // Subscribe to the selected corporate data
+    this.corporateDataService.selectedCorporate$.subscribe((corporate: any) => {
+      if (corporate) {
+        this.corporateId = corporate.id;
+        this.corporateName = corporate.name;
+        this.corporateCode = corporate.code;
+        this.corporateType = corporate.type;
+        this.corporateStatus = corporate.status;
+      } else {
+        // If no data in service, try to get from route params (fallback)
+        const id = this.route.snapshot.paramMap.get('id');
+        if (id) {
+          this.corporateId = id;
+          // You could fetch data from API here based on ID
+        }
+      }
+    });
   }
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private corporateDataService: CorporateDataService
+  ) {}
 }
