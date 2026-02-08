@@ -136,11 +136,12 @@
           <!-- Row 1: Image & Name -->
           <div class="row g-3 mb-3">
             <div class="col-md-3 d-flex align-items-center justify-content-center">
-               <div class="image-upload-box rounded-circle border d-flex align-items-center justify-content-center bg-white text-muted shadow-sm position-relative">
-                 <i class="bi bi-camera fs-4"></i>
-                 <input type="file" class="position-absolute w-100 h-100 opacity-0" title="Upload Image">
+               <div class="image-upload-box rounded-circle border d-flex align-items-center justify-content-center bg-white text-muted shadow-sm position-relative overflow-hidden">
+                 <img *ngIf="selectedImage" [src]="selectedImage" class="preview-image w-100 h-100 object-fit-cover">
+                 <i *ngIf="!selectedImage" class="bi bi-camera fs-4"></i>
+                 <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer" title="Upload Image" (change)="onFileSelected($event)" accept="image/*">
                </div>
-               <div class="small ms-3 text-muted fst-italic">Upload Photo</div>
+               <div class="small ms-3 text-muted fst-italic">{{ selectedImage ? 'Change Photo' : 'Upload Photo' }}</div>
             </div>
             <div class="col-md-9 d-flex align-items-center">
               <div class="w-100">

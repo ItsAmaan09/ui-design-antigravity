@@ -19,6 +19,7 @@ interface User {
   company: string;
   accounts: string[];
   address: string;
+  profileImage?: string; // Added for photo upload
 }
 
 
@@ -71,6 +72,7 @@ export class CorporateUsersListComponent implements OnInit {
   companyLoading = false;
   
   accountList: AccountResponseDto[] = [];
+  selectedImage: string | null = null;
 
   users: User[] = [
     {
@@ -146,6 +148,7 @@ export class CorporateUsersListComponent implements OnInit {
     this.createUserForm.reset({ status: 'Active' });
     this.accountList = [];
     this.companies = []; 
+    this.selectedImage = null; // Reset image
   }
 
   viewUser: User | null = null;
@@ -174,6 +177,7 @@ export class CorporateUsersListComponent implements OnInit {
   openEditModal(user: User) {
     this.isEditMode = true;
     this.editingUserId = user.email; // Using email as ID for now
+    this.selectedImage = user.profileImage || null; // Set user image if available
     
     // Patch simple values
     this.createUserForm.patchValue({
@@ -202,6 +206,17 @@ export class CorporateUsersListComponent implements OnInit {
     // And set the account form value.
     this.getAccountByCorporateId(user.company); // Assuming ID logic handles string
     this.createUserForm.patchValue({ account: user.accounts as any });
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   filterForm = new FormGroup({
