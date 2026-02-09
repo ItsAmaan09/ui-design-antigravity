@@ -35,4 +35,8 @@ export class CorporateService {
   getAccountsByCorporateIdAsync(payload: { CompanyId: any }): Observable<ApiResponse<AccountResponseDto[]>> {
     return this.http.post<ApiResponse<AccountResponseDto[]>>(`${this.baseUrl}Account/GetByCorporateId`, payload);
   }
+
+  createBusiness(payload: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.baseUrl}Company/create`, payload);
+  }
 }

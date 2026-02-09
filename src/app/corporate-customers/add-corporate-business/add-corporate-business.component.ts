@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CorporateService } from '../../services/corporate';
 
 @Component({
   selector: 'app-add-corporate-business',
@@ -13,6 +14,11 @@ import { FormsModule } from '@angular/forms';
 export class AddCorporateBusinessComponent {
   cifNumber: string = '';
   isSearched: boolean = false;
+
+  constructor(
+    private corporateService: CorporateService,
+    private router: Router
+  ) {}
 
   mockBusinessData = {
     name: 'Abdullah Business Services',
@@ -55,5 +61,51 @@ export class AddCorporateBusinessComponent {
 
   toggleFeature(feature: any) {
     feature.selected = !feature.selected;
+  }
+
+  onCreateBusiness() {
+    const selectedAccounts = this.mockAccounts.filter(acc => acc.selected);
+    const selectedFeatures = this.features.filter(feat => feat.selected).map(feat => feat.id);
+
+    if (selectedAccounts.length === 0) {
+      alert('Please select at least one account');
+      return;
+    }
+
+    const payload = {
+      CifNumber: this.cifNumber,
+      BusinessInfo: {
+        Name: this.mockBusinessData.name,
+        Type: this.mockBusinessData.type,
+        ContactPerson: this.mockBusinessData.contactPerson,
+        Phone: this.mockBusinessData.phone,
+        Email: this.mockBusinessData.email,
+        AccountNumber: this.mockBusinessData.accountNumber
+      },
+      Accounts: selectedAccounts.map(acc => ({
+        AccountNumber: acc.accountNumber,
+        AccountName: acc.accountName
+      })),
+      Features: selectedFeatures
+    };
+
+    console.log('Creating business with payload:', payload);
+
+    this.corporateService.createBusiness(payload).subscribe({
+      next: (response) => {
+        if (response.Status) {
+          alert('Business created successfully!');
+          this.router.navigate(['/corporate-customers']);
+        } else {
+          alert('Failed to create business: ' + response.Message);
+        }
+      },
+      error: (error) => {
+        console.error('Error creating business:', error);
+        alert('An error occurred while creating the business. (Mock API might fail)');
+        // For development/demo purposes, we might still want to navigate
+        // this.router.navigate(['/corporate-customers']);
+      }
+    });
   }
 }

@@ -146,7 +146,7 @@
     <div class="card border-0 shadow-sm p-3 mb-5">
       <div class="d-flex justify-content-end gap-3">
         <button class="btn btn-outline-secondary px-4 py-2" [routerLink]="['/corporate-customers']">Cancel</button>
-        <button class="btn btn-primary px-4 py-2 d-flex align-items-center gap-2 search-btn" [routerLink]="['/corporate-customers']">
+        <button class="btn btn-primary px-4 py-2 d-flex align-items-center gap-2 search-btn" (click)="onCreateBusiness()">
           <i class="bi bi-check-circle"></i> Create Business
         </button>
       </div>
