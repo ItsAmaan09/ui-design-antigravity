@@ -29,7 +29,7 @@
   </div>
 
   <!-- CIF Search Card -->
-  <div class="card border-0 shadow-sm p-4">
+  <div class="card border-0 shadow-sm p-4 mb-4">
     <h5 class="fw-bold mb-4">CIF Search</h5>
     <div class="mb-2">
       <label for="cifNumber" class="form-label fw-bold small text-muted">CIF Number</label>
@@ -41,6 +41,7 @@
             id="cifNumber" 
             placeholder="Enter CIF (e.g., 123231)"
             [(ngModel)]="cifNumber"
+            maxlength="6"
           >
         </div>
         <div class="col-auto">
@@ -48,6 +49,106 @@
             <i class="bi bi-search"></i> Search
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isSearched">
+    <!-- Business Information -->
+    <div class="card border-0 shadow-sm p-4 mb-4 business-info-card">
+      <div class="d-flex align-items-center gap-2 mb-4">
+        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+        <h5 class="fw-bold mb-0">Business Information - Account {{ mockBusinessData.accountNumber }}</h5>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold small text-muted">Business Name</label>
+          <div class="info-field p-2 border rounded bg-light-subtle">
+            {{ mockBusinessData.name }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold small text-muted">Business Type</label>
+          <div class="info-field p-2 border rounded bg-light-subtle">
+            {{ mockBusinessData.type }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold small text-muted">Contact Person</label>
+          <div class="info-field p-2 border rounded bg-light-subtle">
+            {{ mockBusinessData.contactPerson }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold small text-muted">Phone Number</label>
+          <div class="info-field p-2 border rounded bg-light-subtle">
+            {{ mockBusinessData.phone }}
+          </div>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-bold small text-muted">Email Address</label>
+          <div class="info-field p-2 border rounded bg-light-subtle">
+            {{ mockBusinessData.email }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="card border-0 shadow-sm p-4 mb-4">
+      <h5 class="fw-bold mb-4">Search Results ({{ mockAccounts.length }} accounts found)</h5>
+      <div class="row g-3">
+        <div class="col-md-6" *ngFor="let account of mockAccounts">
+          <div class="card h-100 border p-3 account-card" [class.selected]="account.selected" (click)="toggleAccount(account)">
+            <div class="d-flex align-items-start gap-3">
+              <div class="custom-checkbox mt-1">
+                <i class="bi" [class.bi-check-square-fill]="account.selected" [class.text-primary]="account.selected" [class.bi-square]="!account.selected" [class.text-muted]="!account.selected"></i>
+              </div>
+              <div class="small">
+                <div class="row mb-1">
+                  <div class="col-auto text-muted" style="min-width: 100px;">CIF:</div>
+                  <div class="col fw-bold">{{ account.cif }}</div>
+                </div>
+                <div class="row mb-1">
+                  <div class="col-auto text-muted" style="min-width: 100px;">Account Number:</div>
+                  <div class="col fw-bold">{{ account.accountNumber }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-auto text-muted" style="min-width: 100px;">Account Name:</div>
+                  <div class="col fw-bold">{{ account.accountName }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assign Features -->
+    <div class="card border-0 shadow-sm p-4 mb-4">
+      <h5 class="fw-bold mb-1">Assign Features</h5>
+      <p class="text-muted small mb-4">Select the features to enable for this business</p>
+      
+      <div class="row g-3">
+        <div class="col-md-6" *ngFor="let feature of features">
+          <div class="form-check d-flex align-items-center gap-2">
+            <input class="form-check-input" type="checkbox" [id]="feature.id" [(ngModel)]="feature.selected">
+            <label class="form-check-label fw-medium" [for]="feature.id">
+              {{ feature.name }}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Footer -->
+    <div class="card border-0 shadow-sm p-3 mb-5">
+      <div class="d-flex justify-content-end gap-3">
+        <button class="btn btn-outline-secondary px-4 py-2" [routerLink]="['/corporate-customers']">Cancel</button>
+        <button class="btn btn-primary px-4 py-2 d-flex align-items-center gap-2 search-btn" [routerLink]="['/corporate-customers']">
+          <i class="bi bi-check-circle"></i> Create Business
+        </button>
       </div>
     </div>
   </div>

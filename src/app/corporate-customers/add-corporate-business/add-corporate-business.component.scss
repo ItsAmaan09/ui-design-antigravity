@@ -65,3 +65,77 @@ h2, h4, h5 {
 .text-muted {
   color: #718096 !important;
 }
+
+.business-info-card {
+  border-left: 4px solid #1a4ba5;
+}
+
+.info-field {
+  background-color: #f8f9fa;
+  border-color: #e2e8f0 !important;
+  color: #2d3748;
+  font-weight: 500;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.account-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-color: #e2e8f0 !important;
+  border-radius: 8px;
+
+  &:hover {
+    border-color: #1a4ba5 !important;
+    background-color: #f7fafc;
+  }
+
+  &.selected {
+    border-color: #1a4ba5 !important;
+    background-color: #ebf4ff;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 1px solid #1a4ba5;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+  }
+
+  .custom-checkbox {
+    font-size: 1.25rem;
+  }
+}
+
+.form-check-input {
+  cursor: pointer;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-color: #cbd5e0;
+  
+  &:checked {
+    background-color: #1a4ba5;
+    border-color: #1a4ba5;
+  }
+}
+
+.form-check-label {
+  cursor: pointer;
+  color: #4a5568;
+}
+
+.search-btn {
+  background-color: #1a4ba5;
+  border-color: #1a4ba5;
+  &:hover {
+    background-color: #153c8a;
+    border-color: #153c8a;
+  }
+}
