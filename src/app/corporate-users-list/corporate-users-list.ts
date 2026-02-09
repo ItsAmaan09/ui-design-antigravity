@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { combineLatest, startWith, map, Observable, Subject, of, debounceTime, distinctUntilChanged, switchMap, tap, delay, filter, catchError } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CorporateService, CompanyResponseDto, AccountResponseDto } from '../services/corporate';
 
 interface User {
@@ -19,7 +20,7 @@ interface User {
   company: string;
   accounts: string[];
   address: string;
-  profileImage?: string; // Added for photo upload
+  profilePic?: string; // Matching user's "ProfilePic" naming
 }
 
 
@@ -39,6 +40,7 @@ export interface CreateUserRequestDto {
   company: string;
   accounts: string[];
   status: 'Active' | 'Inactive';
+  profilePic?: string; // Added for submission
 }
 
 @Component({
@@ -50,6 +52,7 @@ export interface CreateUserRequestDto {
 })
 export class CorporateUsersListComponent implements OnInit {
   private _CorporateService = inject(CorporateService);
+  private _sanitizer = inject(DomSanitizer);
 
   isEditMode = false;
   editingUserId: string | null = null;
@@ -177,7 +180,7 @@ export class CorporateUsersListComponent implements OnInit {
   openEditModal(user: User) {
     this.isEditMode = true;
     this.editingUserId = user.email; // Using email as ID for now
-    this.selectedImage = user.profileImage || null; // Set user image if available
+    this.selectedImage = user.profilePic || null; // Set user image if available
     
     // Patch simple values
     this.createUserForm.patchValue({
@@ -206,6 +209,11 @@ export class CorporateUsersListComponent implements OnInit {
     // And set the account form value.
     this.getAccountByCorporateId(user.company); // Assuming ID logic handles string
     this.createUserForm.patchValue({ account: user.accounts as any });
+  }
+
+  sanitizeImage(base64: string | undefined): SafeResourceUrl | null {
+    if (!base64 || !base64.startsWith('data:image')) return null;
+    return this._sanitizer.bypassSecurityTrustResourceUrl(base64);
   }
 
   onFileSelected(event: any) {
@@ -340,11 +348,23 @@ export class CorporateUsersListComponent implements OnInit {
         address: formValue.address!,
         company: formValue.company!,
         accounts: formValue.account as unknown as string[], 
-        status: (formValue.status as 'Active' | 'Inactive') || 'Active'
+        status: (formValue.status as 'Active' | 'Inactive') || 'Active',
+        profilePic: this.selectedImage || undefined // Include the photo
       };
 
-      console.log('API Payload:', payload);
-      // Here you would call: this.userService.createUser(payload).subscribe(...)
+      if (this.isEditMode) {
+        console.log('Update User (Edit Mode) Payload:', {
+          id: this.editingUserId,
+          ...payload
+        });
+        // API call for update: this.userService.updateUser(this.editingUserId, payload).subscribe(...)
+      } else {
+        console.log('Create User (Add Mode) Payload:', payload);
+        // API call for creation: this.userService.createUser(payload).subscribe(...)
+      }
+      
+      // Optionally Close modal after success (using JS or ViewChild)
+      // For now, just logging
     }
   }
 
