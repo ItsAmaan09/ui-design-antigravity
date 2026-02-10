@@ -1,5 +1,6 @@
 import { Component, input, output, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SelectBeneficiaryComponent } from '../select-beneficiary/select-beneficiary';
 
 export interface Provider {
   id: string;
@@ -13,7 +14,7 @@ export interface Provider {
 @Component({
   selector: 'app-select-provider',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SelectBeneficiaryComponent],
   templateUrl: './select-provider.html',
   styleUrl: './select-provider.scss'
 })
@@ -23,6 +24,7 @@ export class SelectProviderComponent {
   
   providers = signal<Provider[]>([]);
   filteredProviders = signal<Provider[]>([]);
+  selectedProvider = signal<Provider | null>(null);
 
   constructor() {
     effect(() => {
@@ -64,6 +66,14 @@ export class SelectProviderComponent {
 
     this.providers.set(allProviders);
     this.filteredProviders.set(allProviders.filter(p => p.category === category));
+  }
+
+  onProviderClick(provider: Provider) {
+    this.selectedProvider.set(provider);
+  }
+
+  clearProviderSelection() {
+    this.selectedProvider.set(null);
   }
 
   goBack() {

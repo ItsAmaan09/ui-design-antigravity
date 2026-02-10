@@ -1,31 +1,35 @@
-<div class="selection-container">
-  <div class="header">
-    <button class="back-btn" (click)="goBack()">
-      <i class="bi bi-arrow-left"></i>
-    </button>
-    <h1 class="title">Select Provider</h1>
-  </div>
+@if (!selectedProvider()) {
+  <div class="selection-container">
+    <div class="header">
+      <button class="back-btn" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <h1 class="title">Select Provider</h1>
+    </div>
 
-  <p class="subtitle">Select your {{ categoryCode() }} provider</p>
+    <p class="subtitle">Select your {{ categoryCode() }} provider</p>
 
-  <div class="provider-grid">
-    @for (provider of filteredProviders(); track provider.id) {
-      <div class="provider-card">
-        <div class="provider-main">
-          <div class="logo-wrapper">
-            <img [src]="provider.logo" [alt]="provider.name" onerror="this.src='assets/favicon.ico'">
-          </div>
-          <div class="provider-info">
-            <div class="name-row">
-              <h3 class="provider-name">{{ provider.name }}</h3>
-              <span class="status-badge" [class]="provider.status.toLowerCase()">
-                {{ provider.status }}
-              </span>
+    <div class="provider-grid">
+      @for (provider of filteredProviders(); track provider.id) {
+        <div class="provider-card" (click)="onProviderClick(provider)">
+          <div class="provider-main">
+            <div class="logo-wrapper">
+              <img [src]="provider.logo" [alt]="provider.name" onerror="this.src='assets/favicon.ico'">
             </div>
-            <p class="provider-desc">{{ provider.description }}</p>
+            <div class="provider-info">
+              <div class="name-row">
+                <h3 class="provider-name">{{ provider.name }}</h3>
+                <span class="status-badge" [class]="provider.status.toLowerCase()">
+                  {{ provider.status }}
+                </span>
+              </div>
+              <p class="provider-desc">{{ provider.description }}</p>
+            </div>
           </div>
         </div>
-      </div>
-    }
+      }
+    </div>
   </div>
-</div>
+} @else {
+  <app-select-beneficiary [provider]="selectedProvider()" (back)="clearProviderSelection()"></app-select-beneficiary>
+}

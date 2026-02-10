@@ -1,0 +1,41 @@
+<div class="selection-container">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h1 class="title">Select Beneficiary</h1>
+  </div>
+
+  <p class="subtitle">Select a saved beneficiary or enter manually</p>
+
+  <div class="manual-entry-card">
+    <div class="icon-circle">
+      <i class="bi bi-plus"></i>
+    </div>
+    <div class="card-content">
+      <h3 class="card-title">Enter Manually</h3>
+      <p class="card-subtitle">Add a new beneficiary</p>
+    </div>
+  </div>
+
+  <div class="saved-section">
+    <h2 class="section-label">Saved Beneficiaries</h2>
+    <div class="beneficiary-list">
+      @for (ben of beneficiaries(); track ben.id) {
+        <div class="beneficiary-card">
+          <div class="ben-main">
+            <div class="logo-box">
+              <img [src]="ben.logo" [alt]="provider().name" onerror="this.src='assets/favicon.ico'">
+            </div>
+            <div class="ben-info">
+              <h4 class="ben-name">{{ ben.name }}</h4>
+              <p class="ben-ref">{{ ben.reference }}</h4p>
+              <p class="ben-last-paid">Last paid: {{ ben.lastPaid }}</p>
+            </div>
+          </div>
+          <i class="bi bi-arrow-right arrow-icon"></i>
+        </div>
+      }
+    </div>
+  </div>
+</div>
