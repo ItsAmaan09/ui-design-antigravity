@@ -19,18 +19,8 @@ export interface TransactionData {
   styleUrl: './transaction-receipt.scss'
 })
 export class TransactionReceiptComponent {
+  receiptData = input.required<TransactionData>();
   back = output<void>();
-  
-  // In a real app, this would be an input from the payment response
-  receiptData = signal<TransactionData>({
-    transactionId: 'TXN007022',
-    provider: 'Necsom',
-    providerLogo: 'assets/necsom-logo.png',
-    reference: '1',
-    dateTime: 'Feb 10, 2026 02:20 PM',
-    status: 'Completed',
-    amountPaid: '$1.00'
-  });
 
   goBack() {
     this.back.emit();

@@ -1,7 +1,7 @@
 import { Component, output, signal, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TransactionReceiptComponent } from '../transaction-receipt/transaction-receipt';
+import { TransactionReceiptComponent, TransactionData } from '../transaction-receipt/transaction-receipt';
 
 export interface CustomerData {
   name: string;
@@ -22,6 +22,7 @@ export class PaymentDetailsComponent {
 
   paymentAmount = signal<string>('0.00');
   showReceipt = signal<boolean>(false);
+  transactionResult = signal<TransactionData | null>(null);
 
   get displayAmount(): string {
     const amt = parseFloat(this.paymentAmount());
@@ -33,7 +34,27 @@ export class PaymentDetailsComponent {
   }
 
   onPay() {
-    console.log('Processing payment payload for Customer ID:', this.customer().id, 'Amount:', this.displayAmount);
+    const amount = this.displayAmount;
+    const now = new Date();
+    const formattedDate = now.toLocaleString('en-US', { 
+      month: 'short', day: '2-digit', year: 'numeric', 
+      hour: '2-digit', minute: '2-digit', hour12: true 
+    });
+
+    // Mock API Response Payload
+    const response: TransactionData = {
+      transactionId: 'TXN' + Math.floor(Math.random() * 900000 + 100000),
+      provider: 'Necsom',
+      providerLogo: 'assets/necsom-logo.png',
+      reference: this.customer().id,
+      dateTime: formattedDate,
+      status: 'Completed',
+      amountPaid: '$' + amount
+    };
+
+    console.log('Payment API Success. Response Payload:', response);
+    
+    this.transactionResult.set(response);
     this.showReceipt.set(true);
   }
 }
