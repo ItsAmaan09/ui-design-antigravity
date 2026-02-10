@@ -1,27 +1,30 @@
 @if (!showReceipt()) {
-  <div class="selection-container">
-    <div class="header">
-      <button class="back-btn" (click)="goBack()">
-        <i class="bi bi-arrow-left"></i>
-      </button>
-      <h1 class="title">Payment Details</h1>
-    </div>
+<div class="selection-container">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h1 class="title">Payment Details</h1>
+  </div>
 
-    <div class="details-layout">
+  <p class="subtitle">Enter payment details for {{ provider() ? provider()!.name : customer()?.name }}</p>
+
+  <div class="details-layout">
+    @if (provider()?.status !== 'Offline') {
       <div class="info-card">
         <h3 class="card-label">Customer Information</h3>
         <div class="info-rows">
           <div class="info-row">
             <span class="label">Customer Name</span>
-            <span class="value fw-bold">{{ customer().name }}</span>
+            <span class="value fw-bold">{{ customer()?.name }}</span>
           </div>
           <div class="info-row">
             <span class="label">Customer ID</span>
-            <span class="value">{{ customer().id }}</span>
+            <span class="value">{{ customer()?.id }}</span>
           </div>
           <div class="info-row">
             <span class="label">Current Balance</span>
-            <span class="value balance-red fw-bold">{{ customer().balance }}</span>
+            <span class="value balance-red fw-bold">{{ customer()?.balance }}</span>
           </div>
         </div>
       </div>
@@ -40,8 +43,47 @@
           Pay ${{ displayAmount }}
         </button>
       </div>
-    </div>
+    } @else {
+      <div class="offline-payment-card card shadow-sm p-4">
+        <div class="form-group mb-3">
+          <label class="input-label fw-bold mb-2">Meter Number</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Enter Meter Number"
+            [(ngModel)]="meterNumber"
+          >
+        </div>
+        
+        <div class="form-group mb-3">
+          <label class="input-label fw-bold mb-2">Amount</label>
+          <div class="amount-input-wrapper">
+            <input 
+              type="text" 
+              class="form-control p-2" 
+              placeholder="0.00"
+              [(ngModel)]="paymentAmount"
+            >
+          </div>
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="input-label fw-bold mb-2">Description (Optional)</label>
+          <textarea 
+            class="form-control" 
+            rows="3" 
+            placeholder="Add a note..."
+            [(ngModel)]="description"
+          ></textarea>
+        </div>
+
+        <button class="btn btn-primary w-100 py-3 fw-bold" (click)="onPay()">
+          Pay ${{ displayAmount }}
+        </button>
+      </div>
+    }
   </div>
+</div>
 } @else {
   <app-transaction-receipt [receiptData]="transactionResult()!" (back)="showReceipt.set(false)"></app-transaction-receipt>
 }

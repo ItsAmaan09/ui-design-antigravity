@@ -30,6 +30,11 @@
       }
     </div>
   </div>
+} @else if (selectedProvider()?.status === 'Offline') {
+  <app-payment-details 
+    [provider]="selectedProvider()!" 
+    (back)="clearProviderSelection()"
+  ></app-payment-details>
 } @else {
   <app-select-beneficiary [provider]="selectedProvider()" (back)="clearProviderSelection()"></app-select-beneficiary>
 }

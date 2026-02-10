@@ -1,6 +1,7 @@
 import { Component, input, output, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SelectBeneficiaryComponent } from '../select-beneficiary/select-beneficiary';
+import { PaymentDetailsComponent } from '../payment-details/payment-details';
 
 export interface Provider {
   id: string;
@@ -14,7 +15,7 @@ export interface Provider {
 @Component({
   selector: 'app-select-provider',
   standalone: true,
-  imports: [CommonModule, SelectBeneficiaryComponent],
+  imports: [CommonModule, SelectBeneficiaryComponent, PaymentDetailsComponent],
   templateUrl: './select-provider.html',
   styleUrl: './select-provider.scss'
 })
