@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, output, signal, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -16,13 +16,8 @@ export interface CustomerData {
   styleUrl: './payment-details.scss'
 })
 export class PaymentDetailsComponent {
+  customer = input.required<CustomerData>();
   back = output<void>();
-  
-  customer = signal<CustomerData>({
-    name: 'Abdirahman Mohamed',
-    id: '1',
-    balance: '$32.50'
-  });
 
   paymentAmount = signal<string>('0.00');
 

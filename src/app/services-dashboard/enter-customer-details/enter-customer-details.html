@@ -29,5 +29,5 @@
     </div>
   </div>
 } @else {
-  <app-payment-details (back)="showPaymentDetails.set(false)"></app-payment-details>
+  <app-payment-details [customer]="selectedCustomer()!" (back)="showPaymentDetails.set(false)"></app-payment-details>
 }
