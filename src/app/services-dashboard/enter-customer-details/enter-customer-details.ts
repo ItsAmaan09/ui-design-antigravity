@@ -45,6 +45,16 @@ export class EnterCustomerDetailsComponent implements OnInit {
     }
   }
 
+  handlePaymentBack() {
+    if (this.preSelectedCustomer()) {
+      // If we came from a saved beneficiary, go all the way back to the list
+      this.goBack();
+    } else {
+      // If we came from manual entry, just go back to the lookup screen
+      this.showPaymentDetails.set(false);
+    }
+  }
+
   goBack() {
     this.back.emit();
   }
