@@ -1,9 +1,11 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SelectProviderComponent } from './select-provider/select-provider';
 
 export interface ServiceItem {
   id: string;
   name: string;
+  categoryCode: string;
   icon: string;
   color: string;
 }
@@ -20,25 +22,36 @@ export interface TransactionItem {
 @Component({
   selector: 'app-services-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SelectProviderComponent],
   templateUrl: './services-dashboard.html',
   styleUrl: './services-dashboard.scss'
 })
 export class ServicesDashboardComponent implements OnInit {
   services = signal<ServiceItem[]>([]);
   transactions = signal<TransactionItem[]>([]);
+  selectedCategory = signal<string | null>(null);
+
+  constructor() {}
+
+  onServiceClick(service: ServiceItem) {
+    this.selectedCategory.set(service.categoryCode);
+  }
+
+  clearSelection() {
+    this.selectedCategory.set(null);
+  }
 
   ngOnInit() {
     // Mocking API call for services
     this.services.set([
-      { id: '1', name: 'Water', icon: 'bi-droplet-fill', color: '#e3f2fd' },
-      { id: '2', name: 'Electricity', icon: 'bi-lightning-charge-fill', color: '#fff9c4' },
-      { id: '3', name: 'TV Cable', icon: 'bi-tv', color: '#f3e5f5' },
-      { id: '4', name: 'School', icon: 'bi-book', color: '#e8f5e9' },
-      { id: '5', name: 'University', icon: 'bi-mortarboard', color: '#fbe9e7' },
-      { id: '6', name: 'Canshuur', icon: 'bi-file-text', color: '#f3e5f5' },
-      { id: '7', name: 'Gas', icon: 'bi-fire', color: '#fff3e0' },
-      { id: '8', name: 'Health', icon: 'bi-heart-fill', color: '#fce4ec' }
+      { id: '1', name: 'Water', categoryCode: 'water', icon: 'bi-droplet-fill', color: '#e3f2fd' },
+      { id: '2', name: 'Electricity', categoryCode: 'electricity', icon: 'bi-lightning-charge-fill', color: '#fff9c4' },
+      { id: '3', name: 'TV Cable', categoryCode: 'tv_cable', icon: 'bi-tv', color: '#f3e5f5' },
+      { id: '4', name: 'School', categoryCode: 'school', icon: 'bi-book', color: '#e8f5e9' },
+      { id: '5', name: 'University', categoryCode: 'university', icon: 'bi-mortarboard', color: '#fbe9e7' },
+      { id: '6', name: 'Canshuur', categoryCode: 'canshuur', icon: 'bi-file-text', color: '#f3e5f5' },
+      { id: '7', name: 'Gas', categoryCode: 'gas', icon: 'bi-fire', color: '#fff3e0' },
+      { id: '8', name: 'Health', categoryCode: 'health', icon: 'bi-heart-fill', color: '#fce4ec' }
     ]);
 
     // Mocking API call for transactions

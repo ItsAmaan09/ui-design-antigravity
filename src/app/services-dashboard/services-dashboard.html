@@ -1,57 +1,61 @@
-<div class="dashboard-container">
-  <!-- Services Section -->
-  <section class="services-section">
-    <h2 class="section-title">Services</h2>
-    <div class="services-grid">
-      @for (service of services(); track service.id) {
-        <div class="service-card" [id]="'service-' + service.id">
-          <div class="icon-wrapper" [style.--service-color]="service.color">
-            <i class="bi" [ngClass]="service.icon"></i>
+@if (!selectedCategory()) {
+  <div class="dashboard-container">
+    <!-- Services Section -->
+    <section class="services-section">
+      <h2 class="section-title">Services</h2>
+      <div class="services-grid">
+        @for (service of services(); track service.id) {
+          <div class="service-card" [id]="'service-' + service.id" (click)="onServiceClick(service)">
+            <div class="icon-wrapper" [style.--service-color]="service.color">
+              <i class="bi" [ngClass]="service.icon"></i>
+            </div>
+            <span class="service-name">{{ service.name }}</span>
           </div>
-          <span class="service-name">{{ service.name }}</span>
-        </div>
-      }
-    </div>
-  </section>
+        }
+      </div>
+    </section>
 
-  <!-- Recent Transactions Section -->
-  <section class="transactions-section">
-    <h2 class="section-title">Recent Transactions</h2>
-    <div class="table-card">
-      <table class="transactions-table">
-        <thead>
-          <tr>
-            <th id="th-provider">PROVIDER</th>
-            <th id="th-reference">REFERENCE</th>
-            <th id="th-amount">AMOUNT</th>
-            <th id="th-datetime">DATE & TIME</th>
-            <th id="th-status">STATUS</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (tx of transactions(); track tx.reference) {
+    <!-- Recent Transactions Section -->
+    <section class="transactions-section">
+      <h2 class="section-title">Recent Transactions</h2>
+      <div class="table-card">
+        <table class="transactions-table">
+          <thead>
             <tr>
-              <td>
-                <div class="provider-cell">
-                  <div class="provider-logo-img">
-                    <img [src]="tx.providerLogo" [alt]="tx.provider" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                    <div class="logo-fallback">{{ tx.provider.substring(0,1) }}</div>
-                  </div>
-                  <span>{{ tx.provider }}</span>
-                </div>
-              </td>
-              <td class="reference-cell">{{ tx.reference }}</td>
-              <td class="amount-cell"><strong>{{ tx.amount }}</strong></td>
-              <td class="datetime-cell">{{ tx.dateTime }}</td>
-              <td>
-                <span class="status-badge" [class]="tx.status.toLowerCase()">
-                  {{ tx.status }}
-                </span>
-              </td>
+              <th id="th-provider">PROVIDER</th>
+              <th id="th-reference">REFERENCE</th>
+              <th id="th-amount">AMOUNT</th>
+              <th id="th-datetime">DATE & TIME</th>
+              <th id="th-status">STATUS</th>
             </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </section>
-</div>
+          </thead>
+          <tbody>
+            @for (tx of transactions(); track tx.reference) {
+              <tr>
+                <td>
+                  <div class="provider-cell">
+                    <div class="provider-logo-img">
+                      <img [src]="tx.providerLogo" [alt]="tx.provider" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                      <div class="logo-fallback">{{ tx.provider.substring(0,1) }}</div>
+                    </div>
+                    <span>{{ tx.provider }}</span>
+                  </div>
+                </td>
+                <td class="reference-cell">{{ tx.reference }}</td>
+                <td class="amount-cell"><strong>{{ tx.amount }}</strong></td>
+                <td class="datetime-cell">{{ tx.dateTime }}</td>
+                <td>
+                  <span class="status-badge" [class]="tx.status.toLowerCase()">
+                    {{ tx.status }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+} @else {
+  <app-select-provider [categoryCode]="selectedCategory()!" (back)="clearSelection()"></app-select-provider>
+}
