@@ -1,0 +1,56 @@
+<div class="dashboard-container">
+  <!-- Services Section -->
+  <section class="services-section">
+    <h2 class="section-title">Services</h2>
+    <div class="services-grid">
+      @for (service of services(); track service.id) {
+        <div class="service-card" [id]="'service-' + service.id">
+          <div class="icon-wrapper" [style.background-color]="service.color">
+            <i [class]="'icon-' + service.icon"></i>
+            <!-- Placeholder for actual icons if library not available -->
+            @if (service.icon === 'droplet') { <span class="dot"></span> }
+          </div>
+          <span class="service-name">{{ service.name }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Recent Transactions Section -->
+  <section class="transactions-section">
+    <h2 class="section-title">Recent Transactions</h2>
+    <div class="table-card">
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th id="th-provider">PROVIDER</th>
+            <th id="th-reference">REFERENCE</th>
+            <th id="th-amount">AMOUNT</th>
+            <th id="th-datetime">DATE & TIME</th>
+            <th id="th-status">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (tx of transactions(); track tx.reference) {
+            <tr>
+              <td>
+                <div class="provider-cell">
+                  <div class="provider-logo-placeholder"></div>
+                  <span>{{ tx.provider }}</span>
+                </div>
+              </td>
+              <td class="reference-cell">{{ tx.reference }}</td>
+              <td class="amount-cell"><strong>{{ tx.amount }}</strong></td>
+              <td class="datetime-cell">{{ tx.dateTime }}</td>
+              <td>
+                <span class="status-badge" [class]="tx.status.toLowerCase()">
+                  {{ tx.status }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
