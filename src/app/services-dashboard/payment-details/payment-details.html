@@ -1,43 +1,47 @@
-<div class="selection-container">
-  <div class="header">
-    <button class="back-btn" (click)="goBack()">
-      <i class="bi bi-arrow-left"></i>
-    </button>
-    <h1 class="title">Payment Details</h1>
-  </div>
-
-  <div class="details-layout">
-    <div class="info-card">
-      <h3 class="card-label">Customer Information</h3>
-      <div class="info-rows">
-        <div class="info-row">
-          <span class="label">Customer Name</span>
-          <span class="value fw-bold">{{ customer().name }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Customer ID</span>
-          <span class="value">{{ customer().id }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Current Balance</span>
-          <span class="value balance-red fw-bold">{{ customer().balance }}</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="payment-card">
-      <h3 class="card-label">Payment Amount</h3>
-      <div class="amount-input-wrapper">
-        <input 
-          type="text" 
-          class="amount-input" 
-          [(ngModel)]="paymentAmount"
-          placeholder="0.00"
-        >
-      </div>
-      <button class="btn-pay" (click)="onPay()">
-        Pay ${{ displayAmount }}
+@if (!showReceipt()) {
+  <div class="selection-container">
+    <div class="header">
+      <button class="back-btn" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
       </button>
+      <h1 class="title">Payment Details</h1>
+    </div>
+
+    <div class="details-layout">
+      <div class="info-card">
+        <h3 class="card-label">Customer Information</h3>
+        <div class="info-rows">
+          <div class="info-row">
+            <span class="label">Customer Name</span>
+            <span class="value fw-bold">{{ customer().name }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Customer ID</span>
+            <span class="value">{{ customer().id }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Current Balance</span>
+            <span class="value balance-red fw-bold">{{ customer().balance }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <h3 class="card-label">Payment Amount</h3>
+        <div class="amount-input-wrapper">
+          <input 
+            type="text" 
+            class="amount-input" 
+            [(ngModel)]="paymentAmount"
+            placeholder="0.00"
+          >
+        </div>
+        <button class="btn-pay" (click)="onPay()">
+          Pay ${{ displayAmount }}
+        </button>
+      </div>
     </div>
   </div>
-</div>
+} @else {
+  <app-transaction-receipt (back)="showReceipt.set(false)"></app-transaction-receipt>
+}

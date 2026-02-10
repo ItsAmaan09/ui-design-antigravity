@@ -1,0 +1,61 @@
+<div class="selection-container">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h1 class="title">Transaction Receipt</h1>
+  </div>
+
+  <div class="receipt-layout">
+    <div class="receipt-card">
+      <div class="success-header">
+        <div class="check-circle">
+          <i class="bi bi-check2"></i>
+        </div>
+        <h2 class="status-title">Payment Successful</h2>
+        <p class="status-subtitle">Your payment has been processed successfully</p>
+      </div>
+
+      <div class="details-table">
+        <div class="detail-row">
+          <span class="label">Transaction ID</span>
+          <span class="value fw-bold">{{ receiptData().transactionId }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Provider</span>
+          <div class="value provider-val">
+            <img [src]="receiptData().providerLogo" [alt]="receiptData().provider" onerror="this.src='assets/favicon.ico'">
+            <span class="fw-bold">{{ receiptData().provider }}</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <span class="label">Reference</span>
+          <span class="value">{{ receiptData().reference }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Date & Time</span>
+          <span class="value">{{ receiptData().dateTime }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Status</span>
+          <span class="value status-badge badge-success">{{ receiptData().status }}</span>
+        </div>
+        <div class="detail-row amount-row">
+          <span class="label">Amount Paid</span>
+          <span class="value amount-blue fw-bold">{{ receiptData().amountPaid }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-share" (click)="shareReceipt()">
+        <i class="bi bi-share"></i>
+        <span>Share Receipt</span>
+      </button>
+      <button class="btn btn-cancel" (click)="cancelTransaction()">
+        <i class="bi bi-x"></i>
+        <span>Cancel Transaction</span>
+      </button>
+    </div>
+  </div>
+</div>
