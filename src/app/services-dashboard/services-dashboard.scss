@@ -129,12 +129,34 @@
       align-items: center;
       gap: 1rem;
 
-      .provider-logo-placeholder {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: #f0f0f0;
+      .provider-logo-img {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f8f9fa;
         border: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+
+        .logo-fallback {
+          display: none; // Hidden by default, shown via JS on error
+          width: 100%;
+          height: 100%;
+          align-items: center;
+          justify-content: center;
+          background-color: #e3f2fd;
+          color: #1976d2;
+          font-weight: 700;
+          font-size: 1rem;
+        }
       }
     }
 

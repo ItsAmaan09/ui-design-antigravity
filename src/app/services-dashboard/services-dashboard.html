@@ -33,7 +33,10 @@
             <tr>
               <td>
                 <div class="provider-cell">
-                  <div class="provider-logo-placeholder"></div>
+                  <div class="provider-logo-img">
+                    <img [src]="tx.providerLogo" [alt]="tx.provider" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="logo-fallback">{{ tx.provider.substring(0,1) }}</div>
+                  </div>
                   <span>{{ tx.provider }}</span>
                 </div>
               </td>
