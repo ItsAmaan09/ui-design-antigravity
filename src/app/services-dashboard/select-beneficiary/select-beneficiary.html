@@ -9,7 +9,7 @@
 
     <p class="subtitle">Select a saved beneficiary or enter manually</p>
 
-    <div class="manual-entry-card" (click)="showManualEntry.set(true)">
+    <div class="manual-entry-card" (click)="onManualEntryClick()">
       <div class="icon-circle">
         <i class="bi bi-plus"></i>
       </div>
@@ -23,7 +23,7 @@
       <h2 class="section-label">Saved Beneficiaries</h2>
       <div class="beneficiary-list">
         @for (ben of beneficiaries(); track ben.id) {
-          <div class="beneficiary-card">
+          <div class="beneficiary-card" (click)="onSelectBeneficiary(ben)">
             <div class="ben-main">
               <div class="logo-box">
                 <img [src]="ben.logo" [alt]="provider().name" onerror="this.src='assets/favicon.ico'">
@@ -41,5 +41,8 @@
     </div>
   </div>
 } @else {
-  <app-enter-customer-details (back)="showManualEntry.set(false)"></app-enter-customer-details>
+  <app-enter-customer-details 
+    [preSelectedCustomer]="preSelectedCustomer()"
+    (back)="showManualEntry.set(false)"
+  ></app-enter-customer-details>
 }

@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, output, signal, input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaymentDetailsComponent, CustomerData } from '../payment-details/payment-details';
@@ -10,11 +10,21 @@ import { PaymentDetailsComponent, CustomerData } from '../payment-details/paymen
   templateUrl: './enter-customer-details.html',
   styleUrl: './enter-customer-details.scss'
 })
-export class EnterCustomerDetailsComponent {
+export class EnterCustomerDetailsComponent implements OnInit {
   back = output<void>();
+  preSelectedCustomer = input<CustomerData | null>(null);
+  
   customerId = signal<string>('');
   showPaymentDetails = signal<boolean>(false);
   selectedCustomer = signal<CustomerData | null>(null);
+
+  ngOnInit() {
+    const preBtn = this.preSelectedCustomer();
+    if (preBtn) {
+      this.selectedCustomer.set(preBtn);
+      this.showPaymentDetails.set(true);
+    }
+  }
 
   private mockCustomers: CustomerData[] = [
     { id: '1', name: 'Abdirahman Mohamed', balance: '$32.50' },
