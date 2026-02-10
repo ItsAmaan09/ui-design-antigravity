@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SelectProviderComponent } from './select-provider/select-provider';
 
@@ -31,6 +31,23 @@ export class ServicesDashboardComponent implements OnInit {
   transactions = signal<TransactionItem[]>([]);
   selectedCategory = signal<string | null>(null);
 
+  // Pagination Signals
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(5);
+
+  pagedTransactions = computed(() => {
+    const startIndex = (this.currentPage() - 1) * this.pageSize();
+    return this.transactions().slice(startIndex, startIndex + this.pageSize());
+  });
+
+  totalPages = computed(() => {
+    return Math.ceil(this.transactions().length / this.pageSize());
+  });
+
+  pages = computed(() => {
+    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
+  });
+
   constructor() {}
 
   onServiceClick(service: ServiceItem) {
@@ -39,6 +56,20 @@ export class ServicesDashboardComponent implements OnInit {
 
   clearSelection() {
     this.selectedCategory.set(null);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+    }
+  }
+
+  nextPage() {
+    this.goToPage(this.currentPage() + 1);
+  }
+
+  prevPage() {
+    this.goToPage(this.currentPage() - 1);
   }
 
   ngOnInit() {
@@ -58,7 +89,7 @@ export class ServicesDashboardComponent implements OnInit {
     this.transactions.set([
       {
         provider: 'Necsom',
-        providerLogo: 'assets/necsom-logo.png', // Fallback to icon if not found
+        providerLogo: 'assets/necsom-logo.png',
         reference: 'CUST-2847',
         amount: '$45.00',
         dateTime: 'Feb 6, 2026 14:32',
@@ -78,6 +109,78 @@ export class ServicesDashboardComponent implements OnInit {
         reference: 'CUST-1923',
         amount: '$75.25',
         dateTime: 'Feb 4, 2026 16:48',
+        status: 'Completed'
+      },
+      {
+        provider: 'Water Co',
+        providerLogo: 'assets/water-logo.png',
+        reference: 'WTR-7721',
+        amount: '$32.10',
+        dateTime: 'Feb 3, 2026 11:20',
+        status: 'Completed'
+      },
+      {
+        provider: 'TV Cable',
+        providerLogo: 'assets/tv-logo.png',
+        reference: 'TV-1102',
+        amount: '$50.00',
+        dateTime: 'Feb 2, 2026 18:05',
+        status: 'Completed'
+      },
+      {
+        provider: 'University',
+        providerLogo: 'assets/uni-logo.png',
+        reference: 'UNI-4492',
+        amount: '$500.00',
+        dateTime: 'Feb 1, 2026 10:00',
+        status: 'Pending'
+      },
+      {
+        provider: 'Necsom',
+        providerLogo: 'assets/necsom-logo.png',
+        reference: 'CUST-5512',
+        amount: '$65.00',
+        dateTime: 'Jan 31, 2026 15:30',
+        status: 'Completed'
+      },
+      {
+        provider: 'Gas Co',
+        providerLogo: 'assets/gas-logo.png',
+        reference: 'GAS-3381',
+        amount: '$80.20',
+        dateTime: 'Jan 30, 2026 09:45',
+        status: 'Failed'
+      },
+      {
+        provider: 'Mogadishu Power Supply',
+        providerLogo: 'assets/mps-logo.png',
+        reference: 'MTR-1104',
+        amount: '$45.50',
+        dateTime: 'Jan 29, 2026 14:12',
+        status: 'Completed'
+      },
+      {
+        provider: 'Necsom',
+        providerLogo: 'assets/necsom-logo.png',
+        reference: 'CUST-9920',
+        amount: '$90.00',
+        dateTime: 'Jan 28, 2026 12:00',
+        status: 'Completed'
+      },
+      {
+        provider: 'Health Center',
+        providerLogo: 'assets/health-logo.png',
+        reference: 'HLT-2210',
+        amount: '$25.00',
+        dateTime: 'Jan 27, 2026 08:30',
+        status: 'Completed'
+      },
+      {
+        provider: 'Water Co',
+        providerLogo: 'assets/water-logo.png',
+        reference: 'WTR-5511',
+        amount: '$15.00',
+        dateTime: 'Jan 26, 2026 17:15',
         status: 'Completed'
       }
     ]);

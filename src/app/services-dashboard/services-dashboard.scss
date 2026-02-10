@@ -90,11 +90,65 @@
 
 .transactions-section {
   .table-card {
-    background: #fff;
-    border: 1px solid #eee;
+    background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #edf2f7;
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding: 16px 0;
+
+    .pagination-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      background: white;
+      color: #4a5568;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      padding: 0;
+
+      &:hover:not(:disabled) {
+        background: #f7fafc;
+        border-color: #cbd5e0;
+        color: #2b6cb0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #edf2f7;
+      }
+
+      &.active {
+        background: #2b6cb0;
+        color: white;
+        border-color: #2b6cb0;
+        box-shadow: 0 4px 12px rgba(43, 108, 176, 0.25);
+      }
+
+      i {
+        font-size: 1.2rem;
+      }
+    }
+
+    .page-numbers {
+      display: flex;
+      gap: 8px;
+    }
   }
 
   .transactions-table {

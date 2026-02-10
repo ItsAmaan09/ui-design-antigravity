@@ -30,7 +30,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (tx of transactions(); track tx.reference) {
+            @for (tx of pagedTransactions(); track tx.reference) {
               <tr>
                 <td>
                   <div class="provider-cell">
@@ -53,6 +53,37 @@
             }
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination Control -->
+      <div class="pagination-container">
+        <button 
+          class="pagination-btn arrow-btn" 
+          [disabled]="currentPage() === 1"
+          (click)="prevPage()"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <div class="page-numbers">
+          @for (page of pages(); track page) {
+            <button 
+              class="pagination-btn num-btn" 
+              [class.active]="currentPage() === page"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          }
+        </div>
+
+        <button 
+          class="pagination-btn arrow-btn" 
+          [disabled]="currentPage() === totalPages()"
+          (click)="nextPage()"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
     </section>
   </div>
