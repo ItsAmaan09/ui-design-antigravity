@@ -5,7 +5,7 @@
     <div class="services-grid">
       @for (service of services(); track service.id) {
         <div class="service-card" [id]="'service-' + service.id">
-          <div class="icon-wrapper" [style.background-color]="service.color">
+          <div class="icon-wrapper" [style.--service-color]="service.color">
             <i class="bi" [ngClass]="service.icon"></i>
           </div>
           <span class="service-name">{{ service.name }}</span>
