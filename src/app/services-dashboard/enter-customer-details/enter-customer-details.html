@@ -1,0 +1,29 @@
+<div class="selection-container">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h1 class="title">Enter Customer Details</h1>
+  </div>
+
+  <p class="subtitle">Enter the customer ID to lookup account details</p>
+
+  <div class="lookup-card">
+    <div class="input-group-vertical">
+      <label for="customerId" class="input-label">Customer ID</label>
+      <div class="input-row">
+        <input 
+          type="text" 
+          id="customerId" 
+          class="form-control lookup-input" 
+          placeholder="Enter Customer ID"
+          [(ngModel)]="customerId"
+        >
+        <button class="btn btn-search" (click)="onSearch()">
+          <i class="bi bi-search"></i>
+          <span>Search</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { EnterCustomerDetailsComponent } from '../enter-customer-details/enter-customer-details';
 
 export interface Beneficiary {
   id: string;
@@ -12,13 +13,14 @@ export interface Beneficiary {
 @Component({
   selector: 'app-select-beneficiary',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, EnterCustomerDetailsComponent],
   templateUrl: './select-beneficiary.html',
   styleUrl: './select-beneficiary.scss'
 })
 export class SelectBeneficiaryComponent {
   provider = input.required<any>();
   back = output<void>();
+  showManualEntry = signal<boolean>(false);
 
   beneficiaries = signal<Beneficiary[]>([
     {
