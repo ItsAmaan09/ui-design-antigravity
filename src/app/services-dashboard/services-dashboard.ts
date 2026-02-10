@@ -31,14 +31,14 @@ export class ServicesDashboardComponent implements OnInit {
   ngOnInit() {
     // Mocking API call for services
     this.services.set([
-      { id: '1', name: 'Water', icon: 'droplet', color: '#e3f2fd' },
-      { id: '2', name: 'Electricity', icon: 'zap', color: '#fff9c4' },
-      { id: '3', name: 'TV Cable', icon: 'tv', color: '#f3e5f5' },
-      { id: '4', name: 'School', icon: 'book', color: '#e8f5e9' },
-      { id: '5', name: 'University', icon: 'graduation-cap', color: '#fbe9e7' },
-      { id: '6', name: 'Canshuur', icon: 'file-text', color: '#f3e5f5' },
-      { id: '7', name: 'Gas', icon: 'flame', color: '#fff3e0' },
-      { id: '8', name: 'Health', icon: 'heart', color: '#fce4ec' }
+      { id: '1', name: 'Water', icon: 'bi-droplet-fill', color: '#e3f2fd' },
+      { id: '2', name: 'Electricity', icon: 'bi-lightning-charge-fill', color: '#fff9c4' },
+      { id: '3', name: 'TV Cable', icon: 'bi-tv', color: '#f3e5f5' },
+      { id: '4', name: 'School', icon: 'bi-book', color: '#e8f5e9' },
+      { id: '5', name: 'University', icon: 'bi-mortarboard', color: '#fbe9e7' },
+      { id: '6', name: 'Canshuur', icon: 'bi-file-text', color: '#f3e5f5' },
+      { id: '7', name: 'Gas', icon: 'bi-fire', color: '#fff3e0' },
+      { id: '8', name: 'Health', icon: 'bi-heart-fill', color: '#fce4ec' }
     ]);
 
     // Mocking API call for transactions

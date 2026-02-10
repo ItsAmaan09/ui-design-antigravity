@@ -6,9 +6,7 @@
       @for (service of services(); track service.id) {
         <div class="service-card" [id]="'service-' + service.id">
           <div class="icon-wrapper" [style.background-color]="service.color">
-            <i [class]="'icon-' + service.icon"></i>
-            <!-- Placeholder for actual icons if library not available -->
-            @if (service.icon === 'droplet') { <span class="dot"></span> }
+            <i class="bi" [ngClass]="service.icon"></i>
           </div>
           <span class="service-name">{{ service.name }}</span>
         </div>
